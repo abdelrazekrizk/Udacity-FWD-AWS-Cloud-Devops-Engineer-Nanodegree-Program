@@ -1,0 +1,159 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+    Abdelrazek Rizk / Jenkins server stack.
+    Project 5 Cloud DevOps Engineer Capstone
+    This template creates the CodeBuild project,  IAM Roles,
+    Jenkins server with pre-installed Jenkins plugins and CodeDeploy instances to
+    deploy the application using
+    Ubuntu 20 Operating System with 8 vCPUs and 32GB of RAM and 120GB of disk space security groups
+     
+
+# Create a service role for CodeDeploy
+#https://docs.amazonaws.cn/en_us/codedeploy/latest/userguide/getting-started-create-service-role.html#getting-started-create-service-role-console
+#https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html
+Parameters:
+  ID:
+    Description: Unique identifier.
+    Type: String
+
+Resources:
+                                                     ################################### Elastic-IP ####################################
+  JenkinsserverElasticIP:
+      Type: AWS::EC2::EIP
+      Properties:
+        InstanceId: !Ref JenkinsserverInstance
+        Domain: JenkinsserverSecGroup
+        Tags:
+          - Key: "Name"
+            Value: !Sub Jenkins-Server-EIP-${ID}
+
+                                              ################################### EC2 Web Server Sec Group ####################################
+
+  JenkinsserverSecGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupName: !Sub Jenkins-Server-${ID}
+        GroupDescription: Allow port 22 and port 3030 9090 9093 9100 9333 3000.  # Default port allocations https://github.com/prometheus/prometheus/wiki/Default-port-allocations#core-components-starting-at-9090
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: 22
+            ToPort: 22
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 9333                      # open  port 9333 so that Prometheus can collect our node data and send it to the server.
+            ToPort: 9333
+            CidrIp: 0.0.0.0/0        
+          - IpProtocol: tcp  
+            FromPort: 9090                      # Prometheus server Core components starting at 9090
+            ToPort: 9090
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 9093                      # Prometheus Alertmanager
+            ToPort: 9093                        # https://medium.com/@coolphil15/setting-up-monitoring-on-near-node-via-grafana-prometheus-fd641ff82aeb
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 9100                      # Open port 9100 so that Prometheus can collect our node data "Node exporter"
+            ToPort: 9100
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp                    # Open port 3000 Servers with Grafana
+            FromPort: 3000
+            ToPort: 3000
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp                    # Open port 514 Sending Logs from a Linux Syslog Agent
+            FromPort: 514
+            ToPort: 514
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp                    # Open port 6514 insecure logging port 6514
+            FromPort: 6514
+            ToPort: 6514
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp                    # Open port 8000 for app server
+            FromPort: 8000
+            ToPort: 8000
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp                    # Open port 80 for app server
+            FromPort: 80
+            ToPort: 80
+            CidrIp: 0.0.0.0/0 
+          - IpProtocol: tcp                    # Open port 80 for jenkins server
+            FromPort: 8080
+            ToPort: 8080
+            CidrIp: 0.0.0.0/0            
+
+                                                      ################################### EC2 ####################################
+
+  JenkinsserverInstance:
+      Type: AWS::EC2::Instance
+      Properties:
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+
+            # update upgrade EC2
+            sudo apt update -y
+            sudo apt upgrade -y
+
+            # install apt packages
+            sudo apt install curl -y
+            sudo apt install tar -y
+            sudo apt install gzip -y
+            sudo apt install git -y
+            sudo apt install python3 -y
+            sudo apt install awscli -y
+            sudo apt install ansible -y
+
+            # install build-essential packages for compiling software.                            
+            sudo apt install -y build-essential
+            
+            # update upgrade EC2 
+            sudo apt update -y
+            sudo apt upgrade -y
+            sudo apt autoremove -y
+            sudo reboot
+
+            # restart the server
+            sudo apt update -y
+            sudo apt autoclean -y 
+
+            # restart the server
+            sudo apt full-upgrade
+            sudo reboot
+            output : { all : '| tee -a /var/log/cloud-init-output.log' }                                              
+        InstanceType: m4.2xlarge
+        BlockDeviceMappings:
+          - DeviceName: "/dev/sda1"
+            Ebs:
+             VolumeSize: '120'
+        SecurityGroups:
+        - Ref: JenkinsserverSecGroup
+        ImageId: ami-09e67e426f25ce0d7
+        KeyName: server-manage
+        Tags:
+          - Key: Name
+            Value: !Sub Jenkins-Server-${ID}
+# If you use another key pair name, you should change this value to match.
+# If this ami id is not available for you, you can find another (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html)
+# Ubuntu 18 or higher works fine
+Outputs:
+
+  JenkinsserverSecGroup:
+      Description: EC2 Security Group for App Instances
+      Value: !Ref 'JenkinsserverSecGroup'
+
+  JenkinsserverInstance:
+      Description: App Server Instance
+      Value: !Ref 'JenkinsserverInstance'
+
+  JenkinsserverElasticIP:
+      Description: An Elastic IP address is for use either in the EC2-Classic platform 
+      Value: !Ref 'JenkinsserverElasticIP'  
+
+  Version:
+      Description: AWSTemplateFormatVersion "2010-09-09"
+      Value: "2010-09-09"
+  # How To Setup a Firewall with UFW             
+  # https://www.digitalocean.com/community/tutorials/how-to-setup-a-firewall-with-ufw-on-an-ubuntu-and-debian-cloud-server
+
+
+
+  

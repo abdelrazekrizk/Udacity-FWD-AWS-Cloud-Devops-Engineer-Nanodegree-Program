@@ -1,0 +1,84 @@
+ubuntu@ip-172-31-22-124:~$ sudo lsof -i -P -n | grep LISTEN
+systemd-r   829 systemd-resolve   13u  IPv4  12240      0t0  TCP 127.0.0.53:53 (LISTEN)
+sshd       1101            root    3u  IPv4  21668      0t0  TCP *:22 (LISTEN)
+sshd       1101            root    4u  IPv6  21670      0t0  TCP *:22 (LISTEN)
+node       2559          ubuntu   18u  IPv4  31752      0t0  TCP 127.0.0.1:43839 (LISTEN)
+docker-pr  5545            root    4u  IPv4  36744      0t0  TCP 127.0.0.1:49153 (LISTEN)
+docker-pr  5571            root    4u  IPv4  36761      0t0  TCP 127.0.0.1:49154 (LISTEN)
+docker-pr  5586            root    4u  IPv4  41735      0t0  TCP 127.0.0.1:49155 (LISTEN)
+docker-pr  5600            root    4u  IPv4  43283      0t0  TCP 127.0.0.1:49156 (LISTEN)
+docker-pr  5614            root    4u  IPv4  36776      0t0  TCP 127.0.0.1:49157 (LISTEN)
+kubectl   11416          ubuntu    8u  IPv4  68179      0t0  TCP 127.0.0.1:8080 (LISTEN)
+kubectl   11416          ubuntu    9u  IPv6  68180      0t0  TCP [::1]:8080 (LISTEN)
+python    12723          ubuntu    3u  IPv4  73066      0t0  TCP *:8001 (LISTEN)
+python    12743          ubuntu    3u  IPv4  73066      0t0  TCP *:8001 (LISTEN)
+python    12743          ubuntu    4u  IPv4  73066      0t0  TCP *:8001 (LISTEN)
+
+
+ubuntu@ip-172-31-22-124:~$ sudo -i
+root@ip-172-31-22-124:~# 
+root@ip-172-31-22-124:~# iptables -t nat --line-numbers -n -L
+Chain PREROUTING (policy ACCEPT)
+num  target     prot opt source               destination         
+1    DOCKER     all  --  0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
+
+Chain INPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+
+Chain OUTPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+1    DOCKER     all  --  0.0.0.0/0           !127.0.0.0/8          ADDRTYPE match dst-type LOCAL
+
+Chain POSTROUTING (policy ACCEPT)
+num  target     prot opt source               destination         
+1    MASQUERADE  all  --  172.17.0.0/16        0.0.0.0/0           
+2    MASQUERADE  all  --  192.168.49.0/24      0.0.0.0/0           
+3    MASQUERADE  tcp  --  192.168.49.2         192.168.49.2         tcp dpt:32443
+4    MASQUERADE  tcp  --  192.168.49.2         192.168.49.2         tcp dpt:8443
+5    MASQUERADE  tcp  --  192.168.49.2         192.168.49.2         tcp dpt:5000
+6    MASQUERADE  tcp  --  192.168.49.2         192.168.49.2         tcp dpt:2376
+7    MASQUERADE  tcp  --  192.168.49.2         192.168.49.2         tcp dpt:22
+
+Chain DOCKER (2 references)
+num  target     prot opt source               destination         
+1    RETURN     all  --  0.0.0.0/0            0.0.0.0/0           
+2    RETURN     all  --  0.0.0.0/0            0.0.0.0/0           
+3    DNAT       tcp  --  0.0.0.0/0            127.0.0.1            tcp dpt:49153 to:192.168.49.2:32443
+4    DNAT       tcp  --  0.0.0.0/0            127.0.0.1            tcp dpt:49154 to:192.168.49.2:8443
+5    DNAT       tcp  --  0.0.0.0/0            127.0.0.1            tcp dpt:49155 to:192.168.49.2:5000
+6    DNAT       tcp  --  0.0.0.0/0            127.0.0.1            tcp dpt:49156 to:192.168.49.2:2376
+7    DNAT       tcp  --  0.0.0.0/0            127.0.0.1            tcp dpt:49157 to:192.168.49.2:22
+root@ip-172-31-22-124:~# iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+root@ip-172-31-22-124:~# iptables -t nat --line-numbers -n -L
+Chain PREROUTING (policy ACCEPT)
+num  target     prot opt source               destination         
+1    DOCKER     all  --  0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
+2    REDIRECT   tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:80 redir ports 8080
+
+Chain INPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+
+Chain OUTPUT (policy ACCEPT)
+num  target     prot opt source               destination         
+1    DOCKER     all  --  0.0.0.0/0           !127.0.0.0/8          ADDRTYPE match dst-type LOCAL
+
+Chain POSTROUTING (policy ACCEPT)
+num  target     prot opt source               destination         
+1    MASQUERADE  all  --  172.17.0.0/16        0.0.0.0/0           
+2    MASQUERADE  all  --  192.168.49.0/24      0.0.0.0/0           
+3    MASQUERADE  tcp  --  192.168.49.2         192.168.49.2         tcp dpt:32443
+4    MASQUERADE  tcp  --  192.168.49.2         192.168.49.2         tcp dpt:8443
+5    MASQUERADE  tcp  --  192.168.49.2         192.168.49.2         tcp dpt:5000
+6    MASQUERADE  tcp  --  192.168.49.2         192.168.49.2         tcp dpt:2376
+7    MASQUERADE  tcp  --  192.168.49.2         192.168.49.2         tcp dpt:22
+
+Chain DOCKER (2 references)
+num  target     prot opt source               destination         
+1    RETURN     all  --  0.0.0.0/0            0.0.0.0/0           
+2    RETURN     all  --  0.0.0.0/0            0.0.0.0/0           
+3    DNAT       tcp  --  0.0.0.0/0            127.0.0.1            tcp dpt:49153 to:192.168.49.2:32443
+4    DNAT       tcp  --  0.0.0.0/0            127.0.0.1            tcp dpt:49154 to:192.168.49.2:8443
+5    DNAT       tcp  --  0.0.0.0/0            127.0.0.1            tcp dpt:49155 to:192.168.49.2:5000
+6    DNAT       tcp  --  0.0.0.0/0            127.0.0.1            tcp dpt:49156 to:192.168.49.2:2376
+7    DNAT       tcp  --  0.0.0.0/0            127.0.0.1            tcp dpt:49157 to:192.168.49.2:22
+root@ip-172-31-22-124:~# 

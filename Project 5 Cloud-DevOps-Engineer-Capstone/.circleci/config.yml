@@ -1,0 +1,449 @@
+# Docker image amazon/aws-cli that supports AWS CLI for deploy infrastructure
+# calling defaults-deploy   <<: *defaults-deploy
+defaults-deploy: &defaults-deploy
+    docker:
+      - image: cimg/base:edge-20.04
+    working_directory: ~/project
+    parallelism: 1
+
+# Docker image python:3.7-alpine3.11 that supports Ansible using to config Server
+# calling defaults-configure   <<: *defaults-config
+defaults-configure-infrastructure: &defaults-config
+    docker:
+      - image: python:3.7-alpine3.11
+                                                            # working_directory: ~/project/.circleci/ansible
+    parallelism: 1
+
+
+version: 2.1
+orbs:
+  slack: circleci/slack@4.4.4                              # Implement event-based notifications across all of your CI/CD pipelines
+
+commands:
+  destroy-environment:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    parameters:                                            # Add parameter here
+      when_to_destroy:
+        type: string
+        default: "on_fail"
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+                    aws cloudformation delete-stack --stack-name Jenkins-Server-${CIRCLE_WORKFLOW_ID:0:7}
+                    aws cloudformation delete-stack --stack-name jenkins-code-${CIRCLE_WORKFLOW_ID:0:7}
+                    aws s3 rm s3://jenkins-code-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+                    aws s3 rb s3://jenkins-code-${CIRCLE_WORKFLOW_ID:0:7} --force
+jobs:
+  deploy-infrastructure:
+    <<: *defaults-deploy    # working_directory: ~/project  # Docker image cimg/base:edge-20.04 that supports AWS CLI for deploy infrastructure    # working_directory: ~/project  # Docker image cimg/base:edge-20.04 that supports AWS CLI for deploy infrastructure    # working_directory: ~/project  # Docker image cimg/base:edge-20.04 that supports AWS CLI for deploy infrastructure
+    steps:
+      - checkout                                            # Checkout code from git
+      - run:
+          name: Install dependencies                        # Whatever you want to do
+          command: |
+                    sudo apt-get update -y && sudo apt-get upgrade -y
+                    sudo apt upgrade -y
+                    sudo apt-get install openssh-client git -y
+                    sudo apt install ansible -y
+                    sudo apt install curl
+                    sudo apt install python3-pip -y
+                    pip3 install --upgrade pip
+                    sudo python3 -m pip install awscli
+                    #pip3 install awscli
+                    pwd
+                    ls -la
+
+      - run:
+          name: Ensure back-end infrastructure exists       # stackName  Jenkins-Server-${CIRCLE_WORKFLOW_ID:0:7}
+          command: |                                        # WebServerName >> Jenkins-Server-${CIRCLE_WORKFLOW_ID:0:7}
+                    aws cloudformation deploy \
+                    --template-file ./.circleci/files/Server.yml \
+                    --stack-name "Jenkins-Server-${CIRCLE_WORKFLOW_ID:0:7}" \
+                    --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+                    --tags project=Jenkins-Server
+
+      - run:
+          name: Ensure front-end infrastructure exist       # #stackName  S3-Code-${CIRCLE_WORKFLOW_ID:0:7}
+          command: |                                        # BucketName >> jenkins-code-${CIRCLE_WORKFLOW_ID:0:7}
+                    aws cloudformation deploy \
+                    --template-file ./.circleci/files/S3-Code.yml \
+                    --stack-name "jenkins-code-${CIRCLE_WORKFLOW_ID:0:7}" \
+                    --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+                    --tags project=Jenkins-S3-Code
+
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+                    cd .circleci/ansible
+                    aws ec2 describe-instances \
+                    --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                    --filters "Name=tag:Name,Values=Jenkins-Server-${CIRCLE_WORKFLOW_ID:0:7}" \
+                    --output text >> inventory.txt
+                    cat inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
+
+      - run:
+          name: Save back-end IP and send url link to Memstash.io
+          command: |
+                    cd .circleci/urls
+                    ServerIP=$(aws ec2 describe-instances \
+                    --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                    --filters "Name=tag:Name,Values=Jenkins-Server-${CIRCLE_WORKFLOW_ID:0:7}" \
+                    --output text >> Jenkins_Server_IP.txt)
+                    declare -x ServerIP
+                    ServerIP=$(cat Jenkins_Server_IP.txt)
+                    echo $ServerIP | cat
+                    echo "$ServerIP" >> "URLs.txt"
+                    cat Jenkins_Server_IP.txt
+
+                    curl -H "Content-Type: text/plain" -H "token: Jenkins-URL-${CIRCLE_WORKFLOW_ID:0:7}" \
+                    --request PUT \
+                    --data "http://${ServerIP}:8080" \
+                    https://api.memstash.io/values/ServerIP_${CIRCLE_WORKFLOW_ID:0:7}
+
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/urls
+
+      - run:
+          name: export-Jenkins-Server-Public-URL and save
+          command: |
+                    JenkinsURL=$(curl -H "token: Jenkins-URL-${CIRCLE_WORKFLOW_ID:0:7}" \
+                    --request GET \
+                    https://api.memstash.io/values/ServerIP_${CIRCLE_WORKFLOW_ID:0:7})
+
+                    declare -x JenkinsURL
+                    echo "${JenkinsURL}" | cat
+
+                    # "export-Jenkins-Server-URL to Deploy S3-Code objects"
+                    echo "$JenkinsURL" >> ".circleci/urls/Jenkins-API-URL.txt"
+                    echo "$JenkinsURL" >> ".circleci/urls/URLs.txt"
+                    echo "$JenkinsURL" >> ".circleci/urls/tmp.txt"
+
+                    # "export-Jenkins-Server-URL-API-For Smoke Test and save"
+                    # sed with special characters use |: some text |
+
+                    JenkinsServer=$(sed 's|:8080|:8080/api/status|1' .circleci/urls/tmp.txt)
+                    echo "$JenkinsServer" |cat
+                    echo "$JenkinsServer" >> ".circleci/urls/Jenkins_URL.txt"
+                    # find ~/circleci/urls/ -name 'Jenkins_URL.txt' | xargs rpl -iwd ':8080' ':8080/api/status' # yum install -y rpl
+                    pwd
+                    ls -la
+      - run:
+          name: export-Jenkins-Server-Public-DNS and save
+          command: |
+                    cd .circleci/urls
+                    JenkinsDNS=$(aws ec2 describe-instances \
+                    --query 'Reservations[*].Instances[*].PublicDnsName' \
+                    --filters "Name=tag:Name,Values=Jenkins-Server-${CIRCLE_WORKFLOW_ID:0:7}" \
+                    --output text >> Jenkins_DNS.txt)
+
+                    declare -x JenkinsDNS
+                    JenkinsDNS=$(cat Jenkins_DNS.txt)
+                    echo $JenkinsDNS | cat
+                    echo "$JenkinsDNS" >> "URLs.txt"
+                    cat Jenkins_DNS.txt
+
+      - run:
+          name: check saved URL to URLs text files
+          command: |
+                    cat .circleci/urls/Jenkins_Server_IP.txt
+                    cat .circleci/urls/Jenkins-API-URL.txt
+                    cat .circleci/urls/Jenkins_DNS.txt
+                    cat .circleci/urls/Jenkins_URL.txt
+                    cat .circleci/urls/URLs.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/urls
+# Here's where you will add some code to rollback on failure
+
+      - destroy-environment
+
+  Configure-Jenkins-Server:
+    <<: *defaults-config                                 # Docker image python:3.7-alpine3.11 that supports Ansible
+    steps:                                               # Checkout code from git
+      - checkout
+      - add_ssh_keys:                                    # Add ssh keys with fingerprint
+          fingerprints: ["50:59:e2:92:0f:81:91:1c:c8:fa:3e:ba:d3:ac:4a:0b"]   # You can get this ID in the section where you registered the SSH Key
+      - attach_workspace:
+          at: ~/                                         # attach workspace
+
+      - run:
+          name: Install dependencies
+          command: |                                       # install the dependencies needed for your playbook Tar and Gzip are two of the most common utilities for archiving and compressing files
+                    apk add --update ansible
+                    apk add --update tar
+                    apk add --update gzip
+                    apk add --update curl
+                    pip3 install --upgrade pip
+                    pip install awscli
+                    pwd
+                    ls -la
+      - run:
+          name: Configure-Jenkins-Server
+          command: |
+                    cd .circleci/ansible
+                    cat inventory.txt
+                    ansible-playbook -i inventory.txt Configure-Jenkins-Server.yml
+# Here's where you will add some code to rollback on failure
+      - destroy-environment
+
+
+  deploy-S3-Code:
+    <<: *defaults-deploy    # working_directory: ~/project  # Docker image cimg/base:edge-20.04 that supports AWS CLI for deploy infrastructure    # working_directory: ~/project  # Docker image cimg/base:edge-20.04 that supports AWS CLI for deploy infrastructure                                 # Docker image amazon/aws-cli that supports AWS CLI for deploy infrastructure
+    steps:
+      - checkout                                          # Checkout code from git
+      - run:
+          name: Install dependencies                      # install the dependencies needed for your playbook Tar and Gzip are two of the most common utilities for archiving and compressing files
+          working_directory: ~/
+          command: |
+                    sudo apt-get update -y && sudo apt-get upgrade -y
+                    sudo apt upgrade -y
+                    sudo apt-get install openssh-client git -y
+                    sudo apt install ansible -y
+                    sudo apt install curl
+                    sudo apt install python3-pip -y
+                    pip3 install --upgrade pip
+                    sudo python3 -m pip install awscli
+                    #pip3 install awscli
+                    pwd
+                    ls -la
+
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: clone start code
+                                      # Install Node.js 13 on Ubuntu  https://computingforgeeks.com/how-to-install-latest-nodejs-on-ubuntu-debian-linux/ # https://rpm.nodesource.com/setup_13.x
+                                      # Add epel repositories on an Amazon Linux instance    https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/add-repositories.html
+          command: |                  # Install Ansible from epel repositories
+                    cd ~/
+                    git clone https://github.com/abdelrazekrizk/Project-5-Cloud-DevOps-Engineer-Capstone
+                    ls -la
+                    cd ~/Project-5-Cloud-DevOps-Engineer-Capstone
+                    pwd
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: copy start code to s3
+          command: |
+                    aws s3 cp ~/Project-5-Cloud-DevOps-Engineer-Capstone s3://jenkins-code-"${CIRCLE_WORKFLOW_ID:0:7}" --recursive
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project
+# Here's where you will add some code to rollback on failure
+
+      - destroy-environment
+
+  deploy-jenkins-Server:
+    <<: *defaults-config                                   # Docker image python:3.7-alpine3.11 that supports Ansible
+    steps:
+      - checkout                                           # Checkout code from git
+      - add_ssh_keys:                                      # Add ssh keys with fingerprint
+          fingerprints: ["50:59:e2:92:0f:81:91:1c:c8:fa:3e:ba:d3:ac:4a:0b"]   # Add ssh keys with fingerprint
+      - run:
+          name: Install dependencies                          # install the dependencies needed for your playbook Tar and Gzip are two of the most common utilities for archiving and compressing files
+          working_directory: ~/
+          command: |
+                    apk add --update ansible
+                    apk add --update openssh
+                    pip3 install --upgrade pip
+                    pip3 install awscli
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Deploy-Jenkins-Server
+          no_output_timeout: 5m
+          command: |                                           # add to ENVIRONMENT ANSIBLE_HOST_KEY_CHECKING=False
+                    cd .circleci/ansible
+                    cat inventory.txt
+                    ansible-playbook -i inventory.txt Deploy-Jenkins-Server.yml
+                    pwd
+                    ls -la
+
+# Managing host key checking
+# https://docs.ansible.com/ansible/latest/user_guide/connection_details.html#host-key-checking
+# https://bobcares.com/blog/ansible-disable-host-key-checking/
+# Here's where you will add some code to rollback on failure
+
+      #- destroy-environment
+
+  workflow-id-update:
+    <<: *defaults-deploy    # working_directory: ~/project  # Docker image cimg/base:edge-20.04 that supports AWS CLI for deploy infrastructure    # working_directory: ~/project  # Docker image cimg/base:edge-20.04 that supports AWS CLI for deploy infrastructure                                      # Docker image amazon/aws-cli that supports AWS CLI for deploy infrastructure
+    steps:
+      - checkout                                              # Checkout code from git
+      - run:
+          name: Install dependencies                          # install the dependencies needed for your playbook Tar and Gzip are two of the most common utilities for archiving and compressing files
+          working_directory: ~/
+          command: |
+                    sudo apt-get update -y && sudo apt-get upgrade -y
+                    sudo apt upgrade -y
+                    sudo apt-get install openssh-client git -y
+                    sudo apt install ansible -y
+                    sudo apt install curl
+                    sudo apt install python3-pip -y
+                    pip3 install --upgrade pip
+                    sudo python3 -m pip install awscli
+                    #pip3 install awscli
+                    pwd
+                    ls -la
+
+      - attach_workspace:
+          at: .circleci/ansible/CloudFormation
+
+      - run:
+          name: Get old workflow id
+          command: |
+                    Old_Workflow_ID=$(aws cloudformation list-exports \
+                    --query "Exports[?Name=='WorkflowID'].Value" \
+                    --no-paginate \
+                    --output text > ./.circleci/CloudFormation/Old_Workflow_ID.txt)
+
+                    declare -x Old_Workflow_ID
+                    echo "${Old_Workflow_ID}" | cat
+                    cat .circleci/CloudFormation/Old_Workflow_ID.txt
+                    pwd
+                    ls -la
+
+      - run:
+          name: Get old stack
+          command: |
+                    list_old_stack=$(aws cloudformation list-stacks \
+                    --region us-east-1 \
+                    --query 'StackSummaries[].[StackName,StackStatus]' \
+                    --output text | egrep -v 'CREATE_FAILED| CREATE_COMPLETE| UPDATE_COMPLETE| DELETE_FAILED| ROLLBACK_FAILED' \
+                    > ./.circleci/CloudFormation/Old_Stack.txt)
+
+                    # AWS CLI version 2 list-stacks
+                    # https://docs.aws.amazon.com/cli/latest/reference/cloudformation/list-stacks.html#examples
+
+                    declare -x list_old_stack
+                    echo "${list_old_stack}" | cat
+                    cat .circleci/CloudFormation/Old_Stack.txt
+                    pwd
+                    ls -la
+      - run:
+          name: Get New workflow id
+          command: |
+                    New_Workflow_ID=$(aws cloudformation list-exports \
+                    --query "Exports[?Name=='WorkflowID'].Value" \
+                    --no-paginate \
+                    --output text > ./.circleci/CloudFormation/New_Workflow_ID.txt)
+
+                    declare -x New_Workflow_ID
+                    echo "${New_Workflow_ID}" | cat
+                    cat .circleci/CloudFormation/New_Workflow_ID.txt
+                    pwd
+                    ls -la
+# Here's where you will add some code to rollback on failure
+
+      - destroy-environment
+
+  cleanup:
+    <<: *defaults-deploy    # working_directory: ~/project  # Docker image cimg/base:edge-20.04 that supports AWS CLI for deploy infrastructure    # working_directory: ~/project  # Docker image cimg/base:edge-20.04 that supports AWS CLI for deploy infrastructure                                              # Docker image amazon/aws-cli that supports AWS CLI for deploy infrastructure
+    steps:
+      - checkout                                                       # Checkout code from git
+      - run:
+          name: Install dependencies # install the dependencies needed for your playbook Tar and Gzip are two of the most common utilities for archiving and compressing files
+          working_directory: ~/
+          command: |
+                    sudo apt-get update -y && sudo apt-get upgrade -y
+                    sudo apt upgrade -y
+                    sudo apt-get install openssh-client git -y
+                    sudo apt install ansible -y
+                    sudo apt install curl
+                    sudo apt install python3-pip -y
+                    pip3 install --upgrade pip
+                    sudo python3 -m pip install awscli
+                    #pip3 install awscli
+                    pwd
+                    ls -la
+
+      - attach_workspace:
+          at: .circleci/ansible/CloudFormation
+      - run:
+          name: Remove old stacks and files
+          command: |                                                      # WorkflowID_remove=${CIRCLE_WORKFLOW_ID:0:7}
+                    echo "${Old_Workflow_ID}"
+                    echo "${New_Workflow_ID}"
+                    echo "${old_stack}"
+
+                    if [[ "${old_stack[@]}" =~ "${Old_Workflow_ID}" ]]
+                    then
+                      aws s3 rm s3://jenkins-code-${Old_Workflow_ID} --recursive
+                      aws s3 rb s3://jenkins-code-${Old_Workflow_ID} --force
+                      aws cloudformation delete-stack --stack-name jenkins-code-${Old_Workflow_ID}
+                      aws cloudformation delete-stack --stack-name Jenkins-Server-${Old_Workflow_ID}
+                    fi
+
+# Here's where you will add some code to rollback on failure
+      - destroy-environment
+# Below would be the Workflows specific config
+workflows:
+  default:
+    jobs:
+      - deploy-infrastructure:
+          context:
+          - AWSPolicy
+          - Slack-notifications
+          filters:
+            branches:
+              only: [main]
+      - hold-to-check-infrastructure:
+          type: approval
+          requires:
+          - deploy-infrastructure
+          context:
+          - Slack-notifications
+      - Configure-Jenkins-Server:
+          context:
+          - AWSPolicy
+          - Slack-notifications
+          requires:
+          - hold-to-check-infrastructure
+      - hold-to-check-configure-Server:
+          type: approval
+          requires:
+          - Configure-Jenkins-Server
+          context:
+          - Slack-notifications
+      - deploy-S3-Code:
+          context:
+          - AWSPolicy
+          - Slack-notifications
+          requires:
+          - hold-to-check-configure-Server
+      - hold-to-check-S3-Code-deploy:
+          type: approval
+          requires:
+          - deploy-S3-Code
+          context:
+          - Slack-notifications
+      - deploy-jenkins-Server:
+          context:
+          - AWSPolicy
+          - Slack-notifications
+          requires: [hold-to-check-S3-Code-deploy]
+      - hold-to-check-Server-deploy:
+          type: approval
+          requires:
+          - deploy-jenkins-Server
+          context:
+          - Slack-notifications
+      - workflow-id-update:
+          requires: [hold-to-check-Server-deploy]
+          context:
+          - AWSPolicy
+          - Slack-notifications
+      #- cleanup:
+          #context:
+          #- AWSPolicy
+          #- Slack-notifications
+          #requires: [workflow-id-update]

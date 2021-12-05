@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Unique key of the Deployment instance
+  name: udacity-web
+spec:
+  # 3 Pods should exist at all times.
+  replicas: 3
+  selector:
+    matchLabels:
+      app: udacity-web
+  template:
+    metadata:
+      labels:
+        # Apply this label to pods and default
+        # the Deployment label selector to this value
+        app: udacity-web
+    spec:
+      containers:
+      - name: udacity-web
+        # Run this image
+        image: abdelrazekrizk/udacity-web:1.0.0

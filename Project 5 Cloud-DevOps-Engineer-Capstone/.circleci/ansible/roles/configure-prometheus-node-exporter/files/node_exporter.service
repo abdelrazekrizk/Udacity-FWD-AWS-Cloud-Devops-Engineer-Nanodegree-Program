@@ -1,0 +1,39 @@
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/local/bin/node_exporter \
+    --collector.cpu \
+    --collector.diskstats \
+    --collector.filesystem \
+    --collector.loadavg \
+    --collector.meminfo \
+    --collector.filefd \
+    --collector.netdev \
+    --collector.stat \
+    --collector.netstat \
+    --collector.systemd \
+    --collector.uname \
+    --collector.vmstat \
+    --collector.time \
+    --collector.mdadm \
+    --collector.zfs \
+    --collector.tcpstat \
+    --collector.bonding \
+    --collector.hwmon \
+    --collector.arp \
+    --web.listen-address=0.0.0.0:9100 \
+    --web.telemetry-path="/metrics"
+
+SyslogIdentifier=prometheus
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,58 @@
+---
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: "yes"
+
+- name: "remove dependencies that are no longer required"
+  become: yes
+  apt:
+    autoremove: yes
+
+
+- name: "Install Kubernetes Engine Download the Amazon EKS vended kubectl binary "
+  become: yes
+  shell: |
+          sudo curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+  args:
+     warn: false
+
+- name: "Verify the downloaded binary with the SHA-256 sum for your binary"
+  become: yes
+  shell: |
+          openssl sha1 -sha256 kubectl
+  args:
+     warn: false
+
+- name: "Apply execute permissions to the binary"
+  become: yes
+  shell: |
+           sudo chmod +x ./kubectl
+  args:
+     warn: false
+
+- name: "Copy the binary to a folder in your PATH"
+  become: yes
+  shell: |
+           sudo mv ./kubectl /usr/local/bin/kubectl
+  args:
+     warn: false
+
+- name: "Run kubectl"
+  shell: |
+           #minikube start
+           minikube start --cpus=4 --memory 10000 --disk-size 40g
+  args:
+     warn: false
+
+- name: "Verify kubectl version"
+  shell: |
+           kubectl version --short --client
+  args:
+     warn: false
+

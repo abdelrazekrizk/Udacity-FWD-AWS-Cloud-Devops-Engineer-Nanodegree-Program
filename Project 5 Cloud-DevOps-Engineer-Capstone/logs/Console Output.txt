@@ -1,0 +1,184 @@
+Started by user Abdelrazek Rizk
+Obtained Jenkinsfile from git https://github.com/abdelrazekrizk/Project-5-Cloud-DevOps-Engineer-Capstone
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/Project-5-Cloud-DevOps-Engineer-Capstone
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (SCM Checkout)
+[Pipeline] git
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+using credential Git_Credentials
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/Project-5-Cloud-DevOps-Engineer-Capstone/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/abdelrazekrizk/my-app-1 # timeout=10
+Fetching upstream changes from https://github.com/abdelrazekrizk/my-app-1
+ > git --version # timeout=10
+ > git --version # 'git version 2.25.1'
+using GIT_ASKPASS to set credentials Git_Credentials
+ > git fetch --tags --force --progress -- https://github.com/abdelrazekrizk/my-app-1 +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 59feb481b26b20cde3ab1e503dff51daaf8583e6 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 59feb481b26b20cde3ab1e503dff51daaf8583e6 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D main # timeout=10
+ > git checkout -b main 59feb481b26b20cde3ab1e503dff51daaf8583e6 # timeout=10
+Commit message: "Merge branch 'main' of https://github.com/abdelrazekrizk/my-app-1 into main"
+ > git rev-list --no-walk 59feb481b26b20cde3ab1e503dff51daaf8583e6 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Docker Image)
+[Pipeline] sh
++ docker build -t abdelrazekrizk/udacity-web:1.0.0 .
+Sending build context to Docker daemon  5.417MB
+
+Step 1/12 : FROM php:apache
+ ---> 7a0a9213a062
+Step 2/12 : LABEL NAME = "Abdelrazek Rizk"
+ ---> Using cache
+ ---> 02fc7301f454
+Step 3/12 : LABEL EMAIL = "abdelrazek.rizk@hotmail.com"
+ ---> Using cache
+ ---> cbb1fb729e8e
+Step 4/12 : RUN a2enmod rewrite
+ ---> Using cache
+ ---> b72f06a20340
+Step 5/12 : RUN apt-get update     && apt-get install -y libzip-dev git wget nano unzip --no-install-recommends     && apt-get clean     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ ---> Using cache
+ ---> 62b1a2639dc8
+Step 6/12 : RUN docker-php-ext-install pdo mysqli pdo_mysql zip;
+ ---> Using cache
+ ---> e1b72c7c9636
+Step 7/12 : RUN wget --progress=dot:giga https://getcomposer.org/download/2.1.12/composer.phar     && mv composer.phar /usr/bin/composer && chmod +x /usr/bin/composer
+ ---> Using cache
+ ---> 2e902bd998ed
+Step 8/12 : COPY /udacity.zip /var/www/html
+ ---> Using cache
+ ---> d90816cb2b5e
+Step 9/12 : RUN unzip -o /var/www/html/udacity.zip
+ ---> Using cache
+ ---> 2b233bbfd71b
+Step 10/12 : EXPOSE 80
+ ---> Using cache
+ ---> 2dfa480c6a20
+Step 11/12 : WORKDIR /var/www
+ ---> Using cache
+ ---> 4ec96539e293
+Step 12/12 : CMD ["apache2-foreground"]
+ ---> Using cache
+ ---> 00840dcaeacd
+Successfully built 00840dcaeacd
+Successfully tagged abdelrazekrizk/udacity-web:1.0.0
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push Docker Image)
+[Pipeline] withCredentials
+Masking supported pattern matches of $dockerHubPwd
+[Pipeline] {
+[Pipeline] sh
+Warning: A secret was passed to "sh" using Groovy String interpolation, which is insecure.
+		 Affected argument(s) used the following variable(s): [dockerHubPwd]
+		 See https://jenkins.io/redirect/groovy-string-interpolation for details.
++ docker login -u abdelrazekrizk -p ****
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /var/lib/jenkins/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] sh
++ docker push abdelrazekrizk/udacity-web:1.0.0
+The push refers to repository [docker.io/abdelrazekrizk/udacity-web]
+77ea2b1b720f: Preparing
+781907dc50f8: Preparing
+c21f2222e382: Preparing
+e80ad782858d: Preparing
+63f293b8e345: Preparing
+30db47ac0ea0: Preparing
+024366104021: Preparing
+df4196a4a45c: Preparing
+a50f767c8ac6: Preparing
+8b3e67ab0bd0: Preparing
+8bf5266e2217: Preparing
+240c853402b6: Preparing
+17398fc120fa: Preparing
+cfa11f06a213: Preparing
+8f477d20e632: Preparing
+658dc28b7c93: Preparing
+89a3f58688e1: Preparing
+3af749400b4a: Preparing
+e1bbcf243d0e: Preparing
+024366104021: Waiting
+cfa11f06a213: Waiting
+df4196a4a45c: Waiting
+a50f767c8ac6: Waiting
+8b3e67ab0bd0: Waiting
+30db47ac0ea0: Waiting
+8bf5266e2217: Waiting
+8f477d20e632: Waiting
+240c853402b6: Waiting
+3af749400b4a: Waiting
+658dc28b7c93: Waiting
+17398fc120fa: Waiting
+e1bbcf243d0e: Waiting
+89a3f58688e1: Waiting
+77ea2b1b720f: Layer already exists
+63f293b8e345: Layer already exists
+781907dc50f8: Layer already exists
+c21f2222e382: Layer already exists
+e80ad782858d: Layer already exists
+30db47ac0ea0: Layer already exists
+a50f767c8ac6: Layer already exists
+024366104021: Layer already exists
+df4196a4a45c: Layer already exists
+8b3e67ab0bd0: Layer already exists
+8bf5266e2217: Layer already exists
+cfa11f06a213: Layer already exists
+240c853402b6: Layer already exists
+17398fc120fa: Layer already exists
+8f477d20e632: Layer already exists
+658dc28b7c93: Layer already exists
+89a3f58688e1: Layer already exists
+3af749400b4a: Layer already exists
+e1bbcf243d0e: Layer already exists
+1.0.0: digest: sha256:ff5c151cb91dfd0025cc17884d23f31c4945286a3615fb5e0125e017d316aa29 size: 4294
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run docker Container on Dev Server)
+[Pipeline] sh
++ docker run -p 8000:80 -d --name my-app abdelrazekrizk/udacity-web:1.0.0
+64c1e8d2f479bb53320ba5aa881567d2403dd0e1aa9adb6297b74dcc4f4824af
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (lint docker file)
+[Pipeline] sh
++ hadolint --config config.yaml Dockerfile
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run kubectl Container on Dev Server)
+[Pipeline] withCredentials
+Masking supported pattern matches of $KUBECONFIG
+[Pipeline] {
+[Pipeline] sh
++ kubectl apply -f Deployment.yaml
+deployment.apps/udacity-web created
+[Pipeline] sh
++ kubectl apply -f Service.yaml
+service/udacity-web-service created
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

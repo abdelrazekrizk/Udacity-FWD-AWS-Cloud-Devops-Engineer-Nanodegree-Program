@@ -1,0 +1,18 @@
+
+1-Public Url to GitHub repository (not private) 
+https://github.com/abdelrazekrizk/Project-5-Cloud-DevOps-Engineer-Capstone
+
+2-Public Url to dockerHub Image
+https://hub.docker.com/repository/docker/abdelrazekrizk/udacity-web
+
+3-Public URL for jenkins server
+http://3.229.86.142:8080/
+
+username = jenkins
+password = 1
+
+4-Public URLs to deployed application in EC2 
+http://3.229.86.142:8000/
+
+5-Public URL to your Prometheus Node_Exporter
+http://3.229.86.142:9100/metrics

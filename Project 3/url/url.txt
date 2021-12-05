@@ -1,0 +1,45 @@
+
+1-Public Url to GitHub repository (not private) [URL01]
+https://github.com/abdelrazekrizk/Project_3-Give-Your-Application-Auto-Deploy-Superpowers
+
+2-Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02]
+http://udapeople-frontend-52a1b5b.s3-website-us-east-1.amazonaws.com/#/employees
+
+3-Public URL for your CloudFront distribution (aka, your blue production front-end) [URL03]
+http://d1yurymh8qdu9d.cloudfront.net/#/employees
+
+4-Public URLs to deployed application back-end in EC2 [URL04]
+http://34.202.180.92:3030/api/status
+
+5-Public URL to your Prometheus Node_Exporter
+http://34.202.180.92:9100/metrics
+
+6-Public URL to your Prometheus Server [URL05]
+http://3.229.86.142:9090/alerts
+http://3.229.86.142:9090/targets
+
+
+7-Public URL to your Grafana dashboards
+user admin
+password admin
+
+grafana for Node_Exporter
+http://52.0.142.130:3000/d/SnzZcGN7z/node-exporter-full?orgId=1&refresh=1m&from=1632231312744&to=1632317712744
+
+
+grafana for Prometheus AlertManager
+
+http://52.0.142.130:3000/d/WojOgXTmk/prometheus-alertmanager?orgId=1&from=1632723543981&to=1632745143982
+
+8-Public URL to your grafana Server
+http://52.0.142.130:3000/
+
+9-Public URL to your Prometheus-Alertmanager
+http://3.229.86.142:9093/#/alerts
+
+Workspace Name: AWS DevOps Team
+
+Workspace URL: abdelrazek.slack.com
+
+Workspace invite
+https://join.slack.com/t/abdelrazek/shared_invite/zt-w5zzu6yv-m2J~uL_J3MPHMA8I1XuYdQ

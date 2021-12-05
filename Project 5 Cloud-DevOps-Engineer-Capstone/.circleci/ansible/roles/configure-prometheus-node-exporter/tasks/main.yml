@@ -1,0 +1,102 @@
+---
+- name: 'Ensure group "prometheus" exists'
+  become: yes
+  ansible.builtin.group:
+    name: prometheus
+    state: present
+    system: true
+
+- name: 'Ensure group "node_exporter" exists'
+  become: yes
+  ansible.builtin.group:
+    name: node_exporter
+    state: present
+    system: true
+
+- name: "Add the user 'prometheus' with a bash shell, appending the group 'prometheus'"
+  become: yes
+  ansible.builtin.user:
+    name: prometheus
+    create_home: no
+    shell: /usr/sbin/nologin
+    groups: prometheus
+    append: yes
+    system: true
+
+- name: "Add the user 'node_exporter' with a bash shell, appending the group 'node_exporter'"
+  become: yes
+  ansible.builtin.user:
+    name: node_exporter
+    create_home: no
+    shell: /bin/false
+    groups: node_exporter
+    append: yes
+    system: true
+
+- name: "Create directories for Prometheus"
+  become: yes
+  file:
+    path: "/etc/prometheus"
+    state: directory
+    owner: prometheus
+    group: prometheus
+
+- name: "Create directories for Prometheus"
+  become: yes
+  file:
+    path: "/var/lib/prometheus"
+    state: directory
+    owner: prometheus
+    group: prometheus
+
+- name: "set the user and group ownership on the new directories to Prometheus"
+  become: true
+  command: "{{item}}"
+  with_items:
+      - chown prometheus:prometheus /etc/prometheus
+      - chown prometheus:prometheus /var/lib/prometheus
+  args:
+    warn: false # set warn=false to prevent warning
+
+- name: "install node exporter."
+  unarchive:
+    src: https://github.com/prometheus/node_exporter/releases/download/v0.17.0/node_exporter-0.17.0.linux-amd64.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: "move node_exporter binary to /usr/local/bin."
+  become: true
+  copy:
+    src: /tmp/node_exporter-0.17.0.linux-amd64/node_exporter
+    dest: /usr/local/bin/node_exporter
+    remote_src: yes
+    mode: '0777'
+
+- name: "set the ownership on the new directories to node_exporter."
+  become: true
+  command: chown node_exporter:node_exporter /usr/local/bin/node_exporter
+  args:
+    warn: false # set warn=false to prevent warning
+# https://www.cyberciti.biz/faq/configure-set-up-a-firewall-using-firewalld-on-rhel-8/
+
+- name: "Add node exporter configuration."
+  become: true
+  copy:
+    src: node_exporter.service
+    dest: /etc/systemd/system/
+
+- name: "Enable node_exporter service"
+  become: true
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: node_exporter
+    enabled: yes
+
+- name: "Configure_node_exporter_systemd"
+  become: true
+  shell: >
+          cd /
+          cd /etc/systemd/system
+          systemctl daemon-reload
+

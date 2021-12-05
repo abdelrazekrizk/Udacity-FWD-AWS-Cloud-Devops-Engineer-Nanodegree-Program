@@ -1,0 +1,79 @@
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./upload_docker.sh
+
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ubuntu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+Docker ID and Image: abdelrazekrizk/flask_prediction
+Using default tag: latest
+The push refers to repository [docker.io/abdelrazekrizk/flask_prediction]
+18c845df5fda: Pushed
+b11f951569c2: Pushed
+d0e19ddb2480: Pushed
+799a7872c8c7: Mounted from library/python
+715450468940: Mounted from library/python
+c9d608035aef: Mounted from library/python
+bb9c02680a15: Mounted from library/python
+a637c551a0da: Mounted from library/python
+2c8d31157b81: Mounted from library/python
+7b76d801397d: Mounted from library/python
+f32868cde90b: Mounted from library/python
+0db06dff9d9a: Mounted from library/python
+latest: digest: sha256:5cbcd4b552d7bb5ef134a1d904199bea867f6a8f7bd4f637a297d20e259c60fa size: 2847
+
+
+ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ source ~/.devops/bin/activate
+
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./upload_docker.sh
+
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ubuntu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+Docker ID and Image: abdelrazekrizk/flask_prediction
+Using default tag: latest
+The push refers to repository [docker.io/abdelrazekrizk/flask_prediction]
+bccb31943c39: Pushed 
+37f584c1b4a2: Pushed 
+c9636382f06a: Pushed 
+799a7872c8c7: Layer already exists 
+715450468940: Layer already exists 
+c9d608035aef: Layer already exists 
+bb9c02680a15: Layer already exists 
+a637c551a0da: Layer already exists 
+2c8d31157b81: Layer already exists 
+7b76d801397d: Layer already exists 
+f32868cde90b: Layer already exists 
+0db06dff9d9a: Layer already exists 
+latest: digest: sha256:cfa36c866dd1579492fbff15b08834766c0911b0f110f2f233061dd3d035d8a7 size: 2849
+
+
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./upload_docker.sh
+Password: 
+WARNING! Your password will be stored unencrypted in /home/ubuntu/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+Docker ID and Image: abdelrazekrizk/flask_prediction:version1.1.0
+The push refers to repository [docker.io/abdelrazekrizk/flask_prediction]
+adbcd985f284: Pushed 
+23cfe4cfde96: Pushed 
+c9636382f06a: Layer already exists 
+799a7872c8c7: Layer already exists 
+715450468940: Layer already exists 
+c9d608035aef: Layer already exists 
+bb9c02680a15: Layer already exists 
+a637c551a0da: Layer already exists 
+2c8d31157b81: Layer already exists 
+7b76d801397d: Layer already exists 
+f32868cde90b: Layer already exists 
+0db06dff9d9a: Layer already exists 
+version1.1.0: digest: sha256:f13d924c1573e8cb349fe7633b162a861babdcaffe4fa8eddb1ca73752a9632d size: 2849
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ 
+
+

@@ -1,0 +1,60 @@
+---
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: "yes"
+
+- name: "remove dependencies that are no longer required"
+  become: yes
+  apt:
+    autoremove: yes
+
+- name: "Download and install the Open Java Development Kit (OpenJDK)"
+  become: yes
+  shell: |
+           sudo apt-get install openjdk-8-jdk -y
+           #sudo apt install openjdk-11-jdk -y
+           #sudo apt install java-1.8.0-openjdk -y
+  args:
+     warn: false
+
+- name: "Download and install Jenkins"
+  become: yes
+  shell: |
+          wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+
+          sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > \
+              /etc/apt/sources.list.d/jenkins.list'
+          sudo apt-get update
+          sudo apt-get install jenkins -y
+  args:
+     warn: false
+
+- name: "checking java installation"
+  become: yes
+  shell: |
+           java -version
+  args:
+     warn: false
+
+- name: "start jenkins server"
+  become: yes
+  shell: |
+            sudo systemctl daemon-reload
+            sudo systemctl start jenkins
+            sudo systemctl status jenkins
+  args:
+     warn: false
+
+- #name: "Unlock Jenkinso ensure Jenkins is securely"
+  #become: yes
+  #shell: |
+            #sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+  #args:
+     #warn: false
+

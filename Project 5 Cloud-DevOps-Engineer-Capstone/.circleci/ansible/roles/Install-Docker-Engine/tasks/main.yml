@@ -1,0 +1,70 @@
+---
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: "yes"
+
+- name: "remove dependencies that are no longer required"
+  become: yes
+  apt:
+    autoremove: yes
+
+- name: "Install using the repository"
+  become: yes
+  shell: |
+           sudo apt-get update
+           sudo apt-get install \
+                ca-certificates \
+                curl \
+                gnupg \
+                lsb-release
+  args:
+     warn: false
+
+- name: "Add Docker’s official GPG key"
+  become: yes
+  shell: |
+           sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  args:
+     warn: false
+
+- name: "set up the stable repository"
+  become: yes
+  shell: |
+           echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  args:
+     warn: false
+
+- name: "Install Docker Engine"
+  become: yes
+  shell: |
+           sudo apt-get update
+           sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+  args:
+     warn: false
+
+- name: "add Docker group - user"
+  become: yes
+  shell: |
+           sudo chmod 666 /var/run/docker.sock
+           #sudo addgroup docker
+           #sudo usermod -aG docker
+  args:
+     warn: false
+
+- name: "checking installation"
+  become: yes
+  shell: |
+           docker version
+
+#Install from a package
+# sudo wget https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/
+
+# sudo dpkg -i /path/to/package.deb

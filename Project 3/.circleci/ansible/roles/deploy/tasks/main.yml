@@ -1,0 +1,85 @@
+---
+- name: "install apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "Move backend files to web server"
+  become: true
+  copy:
+    src: /root/project/backend.tar.gz
+    dest: "~/"
+    owner: ubuntu
+    group: ubuntu
+    mode: 0777 
+
+- name: "Check for tar file"
+  become: true
+  command:
+          ls -l ~/backend.tar.gz
+
+- name: "Move backend files to Udapeople APP directory "
+  become: true
+  copy:
+    src: "~/"
+    dest: "/opt/udapeople-app"
+    remote_src: yes 
+    owner: ubuntu
+    group: ubuntu
+    mode: 0777                           
+# File Permission 0755 http://www.filepermissions.com/file-permission/0755
+
+- name: "Un-compress Backend"
+  become: true
+  shell: |
+          cd /opt/udapeople-app
+          tar xvzf backend.tar.gz
+          rm backend.tar.gz
+          cd backend/
+          ls -la
+          
+- name: "Check and install npm"
+  become: true
+  shell: >
+          npm install
+  args:
+    chdir: "/opt/udapeople-app/backend"
+
+- name: "Check and install npm dotenv"
+  become: true
+  shell: >
+          npm install dotenv
+  args:
+    chdir: "/opt/udapeople-app/backend"    
+
+- name: "run udapeople"
+  become: true
+  shell: >
+          npm run build
+  args:
+    chdir: "/opt/udapeople-app/backend" 
+    
+
+- name: "stop delete anything that might already be running"
+  become: true
+  command: pm2 kill
+  ignore_errors: true
+
+- name: " pm2 serve udapeople-app in port 3030 "
+  become: true
+  shell: >
+          cd ~/
+          pm2 
+          pm2 serve /opt/udapeople-app/backend/dist 3030
+  ignore_errors: true
+
+- name: "start udapeople-app server"
+  become: true
+  shell: >            
+          pm2 start -f ./main.js
+          pm2 save          
+# Saving the app list to be restored at reboot 
+  args:
+    chdir: "/opt/udapeople-app/backend/dist"
+  ignore_errors: true                     
+#  EXPOSE STATIC FILE OVER HTTP https://pm2.keymetrics.io/docs/usage/expose/

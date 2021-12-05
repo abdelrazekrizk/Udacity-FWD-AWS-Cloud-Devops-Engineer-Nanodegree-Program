@@ -1,0 +1,169 @@
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ circleci local execute --job build
+Docker image digest: sha256:4c1c39c6dfb8a5e85381583a5d9e327fa43a72090dd2e7ca4ad87cb94d37cc50
+====>> Spin up environment
+Build-agent version  ()
+System information:
+ Server Version: 20.10.9
+ Storage Driver: overlay2
+  Backing Filesystem: extfs
+ Cgroup Driver: cgroupfs
+ Cgroup Version: 1
+ Kernel Version: 5.4.0-1058-aws
+ Operating System: Ubuntu 18.04.6 LTS
+ OSType: linux
+ Architecture: x86_64
+
+Starting container python:3.7.3-stretch
+python:3.7.3-stretch:
+  using image python@sha256:205cafadbb7f0c48f2a6d655eb100a9675aa85e6e73958860f488406cce09779
+  pull stats: Image was already available so the image was not pulled
+  time to create container: 39ms
+Creating Docker containers in parallel
+Warning: No authentication provided, using CircleCI credentials for pulls from Docker Hub.
+Time to upload agent and config: 454.302253ms
+Time to start containers: 369.371329ms
+====>> Preparing environment variables
+Using build environment variables:
+  BASH_ENV=/tmp/.bash_env-localbuild-1634855555
+  CI=true
+  CIRCLECI=true
+  CIRCLE_BRANCH=
+  CIRCLE_BUILD_NUM=
+  CIRCLE_JOB=build
+  CIRCLE_NODE_INDEX=0
+  CIRCLE_NODE_TOTAL=1
+  CIRCLE_REPOSITORY_URL=
+  CIRCLE_SHA1=
+  CIRCLE_SHELL_ENV=/tmp/.bash_env-localbuild-1634855555
+  CIRCLE_WORKING_DIRECTORY=~/repo
+
+
+The redacted variables listed above will be masked in run step output.====>> Checkout code
+Making checkout directory "/root/repo"
+Copying files from "/tmp/_circleci_local_build_repo" to "/root/repo"
+====>> Restoring cache
+Error:
+skipping cache - error checking storage: not supported
+
+Step failed
+====>> install dependencies
+  #!/bin/bash -eo pipefail
+python3 -m venv venv
+. venv/bin/activate
+make install
+# Install hadolint
+wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
+    chmod +x /bin/hadolint
+
+# This should be run from inside a virtualenv
+pip install --upgrade pip &&\
+        pip install -r requirements.txt
+Collecting pip
+  Downloading https://files.pythonhosted.org/packages/90/a9/1ea3a69a51dcc679724e3512fc2aa1668999eed59976f749134eb02229c8/pip-21.3-py3-none-any.whl (1.7MB)
+    100% |████████████████████████████████| 1.7MB 18.1MB/s
+Installing collected packages: pip
+  Found existing installation: pip 19.0.3
+    Uninstalling pip-19.0.3:
+      Successfully uninstalled pip-19.0.3
+Successfully installed pip-21.3
+Collecting Click==7.0
+  Downloading Click-7.0-py2.py3-none-any.whl (81 kB)
+     |████████████████████████████████| 81 kB 8.3 MB/s
+Collecting Flask==1.0.2
+  Downloading Flask-1.0.2-py2.py3-none-any.whl (91 kB)
+     |████████████████████████████████| 91 kB 14.0 MB/s
+Collecting itsdangerous==1.1.0
+  Downloading itsdangerous-1.1.0-py2.py3-none-any.whl (16 kB)
+Collecting Jinja2==2.10.3
+  Downloading Jinja2-2.10.3-py2.py3-none-any.whl (125 kB)
+     |████████████████████████████████| 125 kB 83.7 MB/s
+Collecting MarkupSafe==1.1.1
+  Downloading MarkupSafe-1.1.1-cp37-cp37m-manylinux2010_x86_64.whl (33 kB)
+Collecting numpy==1.17.2
+  Downloading numpy-1.17.2-cp37-cp37m-manylinux1_x86_64.whl (20.3 MB)
+     |████████████████████████████████| 20.3 MB 85.5 MB/s
+Collecting pandas==0.24.2
+  Downloading pandas-0.24.2-cp37-cp37m-manylinux1_x86_64.whl (10.1 MB)
+     |████████████████████████████████| 10.1 MB 59.6 MB/s
+Collecting python-dateutil==2.8.0
+  Downloading python_dateutil-2.8.0-py2.py3-none-any.whl (226 kB)
+     |████████████████████████████████| 226 kB 83.6 MB/s
+Collecting pytz==2019.3
+  Downloading pytz-2019.3-py2.py3-none-any.whl (509 kB)
+     |████████████████████████████████| 509 kB 81.6 MB/s
+Collecting scikit-learn==0.20.3
+  Downloading scikit_learn-0.20.3-cp37-cp37m-manylinux1_x86_64.whl (5.4 MB)
+     |████████████████████████████████| 5.4 MB 32.6 MB/s
+Collecting scipy==1.3.1
+  Downloading scipy-1.3.1-cp37-cp37m-manylinux1_x86_64.whl (25.2 MB)
+     |████████████████████████████████| 25.2 MB 28.9 MB/s
+Collecting six==1.12.0
+  Downloading six-1.12.0-py2.py3-none-any.whl (10 kB)
+Collecting Werkzeug==0.16.0
+  Downloading Werkzeug-0.16.0-py2.py3-none-any.whl (327 kB)
+     |████████████████████████████████| 327 kB 84.6 MB/s
+Collecting pylint
+  Downloading pylint-2.11.1-py3-none-any.whl (392 kB)
+     |████████████████████████████████| 392 kB 94.8 MB/s
+Collecting toml>=0.7.1
+  Downloading toml-0.10.2-py2.py3-none-any.whl (16 kB)
+Collecting astroid<2.9,>=2.8.0
+  Downloading astroid-2.8.3-py3-none-any.whl (246 kB)
+     |████████████████████████████████| 246 kB 100.1 MB/s
+Collecting typing-extensions>=3.10.0
+  Downloading typing_extensions-3.10.0.2-py3-none-any.whl (26 kB)
+Collecting isort<6,>=4.2.5
+  Downloading isort-5.9.3-py3-none-any.whl (106 kB)
+     |████████████████████████████████| 106 kB 83.3 MB/s
+Collecting platformdirs>=2.2.0
+  Downloading platformdirs-2.4.0-py3-none-any.whl (14 kB)
+Collecting mccabe<0.7,>=0.6
+  Downloading mccabe-0.6.1-py2.py3-none-any.whl (8.6 kB)
+Requirement already satisfied: setuptools>=20.0 in ./venv/lib/python3.7/site-packages (from astroid<2.9,>=2.8.0->pylint->-r requirements.txt (line 14)) (40.8.0)
+Collecting lazy-object-proxy>=1.4.0
+  Downloading lazy_object_proxy-1.6.0-cp37-cp37m-manylinux1_x86_64.whl (55 kB)
+     |████████████████████████████████| 55 kB 7.3 MB/s
+Collecting typed-ast<1.5,>=1.4.0
+  Downloading typed_ast-1.4.3-cp37-cp37m-manylinux1_x86_64.whl (743 kB)
+     |████████████████████████████████| 743 kB 79.4 MB/s
+Collecting wrapt<1.14,>=1.11
+  Downloading wrapt-1.13.2-cp37-cp37m-manylinux2010_x86_64.whl (79 kB)
+     |████████████████████████████████| 79 kB 12.0 MB/s
+Installing collected packages: wrapt, typing-extensions, typed-ast, six, numpy, MarkupSafe, lazy-object-proxy, Werkzeug, toml, scipy, pytz, python-dateutil, platformdirs, mccabe, Jinja2, itsdangerous, isort, Click, astroid, scikit-learn, pylint, pandas, Flask
+Successfully installed Click-7.0 Flask-1.0.2 Jinja2-2.10.3 MarkupSafe-1.1.1 Werkzeug-0.16.0 astroid-2.8.3 isort-5.9.3 itsdangerous-1.1.0 lazy-object-proxy-1.6.0 mccabe-0.6.1 numpy-1.17.2 pandas-0.24.2 platformdirs-2.4.0 pylint-2.11.1 python-dateutil-2.8.0 pytz-2019.3 scikit-learn-0.20.3 scipy-1.3.1 six-1.12.0 toml-0.10.2 typed-ast-1.4.3 typing-extensions-3.10.0.2 wrapt-1.13.2
+--2021-10-21 22:32:57--  https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
+Resolving github.com (github.com)... 140.82.114.3
+Connecting to github.com (github.com)|140.82.114.3|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://github-releases.githubusercontent.com/46234189/497d2080-54bd-11e9-94e5-926d35bd3e53?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20211021%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211021T223257Z&X-Amz-Expires=300&X-Amz-Signature=40ad1b334566d1f212c99a114ab990281dac0bbd29d6ce41c255a32955ef04e5&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=46234189&response-content-disposition=attachment%3B%20filename%3Dhadolint-Linux-x86_64&response-content-type=application%2Foctet-stream [following]
+--2021-10-21 22:32:57--  https://github-releases.githubusercontent.com/46234189/497d2080-54bd-11e9-94e5-926d35bd3e53?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20211021%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211021T223257Z&X-Amz-Expires=300&X-Amz-Signature=40ad1b334566d1f212c99a114ab990281dac0bbd29d6ce41c255a32955ef04e5&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=46234189&response-content-disposition=attachment%3B%20filename%3Dhadolint-Linux-x86_64&response-content-type=application%2Foctet-stream
+Resolving github-releases.githubusercontent.com (github-releases.githubusercontent.com)... 185.199.110.154, 185.199.109.154, 185.199.108.154, ...
+Connecting to github-releases.githubusercontent.com (github-releases.githubusercontent.com)|185.199.110.154|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 3683832 (3.5M) [application/octet-stream]
+Saving to: ‘/bin/hadolint’
+
+/bin/hadolint       100%[===================>]   3.51M  --.-KB/s    in 0.04s
+
+2021-10-21 22:32:57 (80.3 MB/s) - ‘/bin/hadolint’ saved [3683832/3683832]
+
+====>> Saving cache
+Error:
+Skipping cache - error checking storage: not supported
+
+Step failed
+====>> run lint
+  #!/bin/bash -eo pipefail
+. venv/bin/activate
+make lint
+# See local hadolint install instructions:   https://github.com/hadolint/hadolint
+# This is linter for Dockerfiles
+hadolint Dockerfile
+# This is a linter for Python source code linter: https://www.pylint.org/
+# This should be run from inside a virtualenv
+pylint --disable=R,C,W1203 app.py
+
+------------------------------------
+Your code has been rated at 10.00/10
+
+Success!

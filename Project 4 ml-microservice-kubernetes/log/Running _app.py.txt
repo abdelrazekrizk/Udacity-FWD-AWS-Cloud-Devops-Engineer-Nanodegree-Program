@@ -1,0 +1,16 @@
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ python3 app.py
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on http://0.0.0.0:8081/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 379-191-143
+ * Detected change in '/home/ubuntu/.devops/lib/python3.6/site-packages/flask/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 379-191-143
+127.0.0.1 - - [21/Oct/2021 03:44:25] "GET / HTTP/1.1" 200 -
+

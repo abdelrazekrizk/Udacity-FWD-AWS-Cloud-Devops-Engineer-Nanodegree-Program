@@ -1,0 +1,100 @@
+---
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: "yes"
+
+- name: "remove dependencies that are no longer required"
+  become: yes
+  apt:
+    autoremove: yes
+
+- name: "Install  nodejs"
+  become: yes
+  shell: |
+          curl -fsSL https://deb.nodesource.com/setup_12.x | sudo -E bash - # Using Ubuntu
+          sudo apt-get install -y nodejs
+  args:
+     warn: false
+
+- name: "install typescript #https://www.npmjs.com/package/typescript"
+  become: yes
+  shell: |           
+          cd ~           
+          npm install -g typescript
+  ignore_errors: true
+
+- name: "install node-sass #https://www.npmjs.com/package/node-sass"
+  become: yes
+  shell: |           
+          cd ~           
+          npm install node-sass
+  ignore_errors: true 
+
+
+- name: "install pm2"
+  become: yes
+  shell: |           
+          cd ~
+          npm install pm2 -g
+          pm2
+  ignore_errors: true
+
+- name: "Add pm2 startup"
+  become: yes
+  shell: |
+          cd ~   
+          pm2 startup 
+          sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ubuntu --hp /home/ubuntu
+  ignore_errors: true        
+
+- name: Setup Install nvm
+  become: yes
+  become_method: sudo
+  become_flags: -i # Execute config files such as .profile (Ansible uses non-interactive login shells)
+  become_user: ubuntu
+  block:
+    - name: Install nvm
+      ansible.builtin.shell: >
+                              curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.38.0/install.sh | bash
+      args:
+        executable: /bin/bash
+        chdir: "$HOME"
+        creates: "$HOME/.nvm/nvm.sh"
+        warn: false
+
+- name: "reload-bashrc-settings-without-logging-out-and-back-in-again"
+  become: true
+  shell: > 
+          cd ~/
+          . ~/.bashrc
+          . ~/.profile
+          . ~/.nvm/nvm.sh
+          bash --login
+
+- name: Setup .profile
+  ansible.builtin.lineinfile:
+    path: ~/.profile
+    line: source ~/.nvm/nvm.sh  # This will make sure Node is on the user's PATH
+    create: yes
+
+- name: "Install loggly Configure Syslog Daemon"
+  become: yes
+  shell: |
+          curl -O https://www.loggly.com/install/configure-linux.sh
+  args:
+     warn: false
+
+- name: "Create APP directory"
+  become: yes
+  file:
+    path: "/opt/udapeople-app"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: 0777

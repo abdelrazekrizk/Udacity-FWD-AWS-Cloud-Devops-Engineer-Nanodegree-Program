@@ -1,0 +1,227 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+    Abdelrazek Rizk / Project 2 Deploy A High-Availability Web App Using Cloudformation
+    part 2 
+           deploy web servers for a highly available web app using CloudFormation
+           using Ubuntu 18 Operating System with two vCPUs and 8GB of RAM and 15GB of disk space
+           LoadBalancer, Launch Configuration, AutoScaling group a health check, security groups and a Listener and Target Group. 
+Parameters:
+
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resource names
+        Type: String
+# Create a service role for CodeDeploy
+#https://docs.amazonaws.cn/en_us/codedeploy/latest/userguide/getting-started-create-service-role.html#getting-started-create-service-role-console
+#https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html
+
+Resources:
+
+  EC2accesstoS3buckettodownloadrevisionRole: 
+    Type: "AWS::IAM::Role"
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Allow"
+            Principal: 
+              Service: 
+                - "ec2.amazonaws.com"
+                - "codedeploy.amazonaws.com"                
+            Action: 
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+       - "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess" 
+       - "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy" 
+      Path: "/"
+  RolePolicies: 
+    Type: "AWS::IAM::Policy"
+    Properties: 
+      PolicyName: "S3bucketcodedeploy"
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: "Allow"
+            Action: "*"
+            Resource: "*"
+      Roles: 
+        - Ref: "EC2accesstoS3buckettodownloadrevisionRole"
+  RootInstanceProfile: 
+    Type: "AWS::IAM::InstanceProfile"
+    Properties: 
+      Path: "/"
+      Roles: 
+        - Ref: "EC2accesstoS3buckettodownloadrevisionRole"  
+ 
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to our load balancer
+      VpcId:
+        Fn::ImportValue:
+          !Sub "${EnvironmentName}-VPCID"
+
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+
+  WebServerSecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to our hosts and SSH from local only
+      VpcId:
+        Fn::ImportValue:
+          !Sub "${EnvironmentName}-VPCID"
+          
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 0
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+        
+  WebAppLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          sudo apt-get update -y
+          sudo apt-get install unzip awscli -y
+          sudo apt-get install apache2 -y
+          systemctl start apache2.service
+          cd /var/www/html
+          aws s3 cp s3://udacity-demo-1/udacity.zip .
+          unzip -o udacity.zip
+
+      ImageId: ami-0747bdcabd34c712a
+      KeyName: Cloud DevOps Engineer
+      SecurityGroups:
+      - Ref: WebServerSecGroup
+      InstanceType: t3.large
+      BlockDeviceMappings:
+      - DeviceName: "/dev/sda1"
+        Ebs:
+          VolumeSize: '15'
+
+  WebAppTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 10
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 8
+      HealthyThresholdCount: 2
+      Port: 80
+      Protocol: HTTP
+      UnhealthyThresholdCount: 5
+      VpcId: 
+        Fn::ImportValue:
+          Fn::Sub: "${EnvironmentName}-VPCID"
+
+  WebAppServerGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier:
+      - Fn::ImportValue: 
+          !Sub "${EnvironmentName}-PRIV-NETS"
+      LaunchConfigurationName:
+        Ref: WebAppLaunchConfig
+      MinSize: '2'
+      MaxSize: '4'
+      DesiredCapacity: '4'
+      TargetGroupARNs:
+      - Ref: WebAppTargetGroup
+      MetricsCollection: 
+        - Granularity: "1Minute"
+          Metrics: 
+            - "GroupMinSize"
+            - "GroupMaxSize"
+      Tags:
+        - Key: Environment
+          Value: Production
+          PropagateAtLaunch: "true"
+        - Key: Purpose
+          Value: WebServerGroup
+          PropagateAtLaunch: "false"
+      
+  WebAppLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Subnets:
+      - Fn::ImportValue: !Sub "${EnvironmentName}-PUB1-SN"
+      - Fn::ImportValue: !Sub "${EnvironmentName}-PUB2-SN"
+      SecurityGroups:
+      - Ref: LoadBalancerSecurityGroup
+
+  Listener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+      - Type: forward
+        TargetGroupArn:
+          Ref: WebAppTargetGroup
+      LoadBalancerArn:
+        Ref: WebAppLoadBalancer
+      Port: '80'
+      Protocol: HTTP
+  ALBListenerRule:
+      Type: AWS::ElasticLoadBalancingV2::ListenerRule
+      Properties:
+        Actions:
+        - Type: forward
+          TargetGroupArn: !Ref 'WebAppTargetGroup'
+        Conditions:
+        - Field: path-pattern
+          Values: [/]
+        ListenerArn: !Ref 'Listener'
+        Priority: 1
+Outputs:
+
+  wepapp:
+    Description: The website URL
+    Value:
+      !Sub
+        - 'http://${DNSName}'
+        - {DNSName: !GetAtt 'WebAppLoadBalancer.DNSName'}
+    Export:
+      Name: !Sub "${EnvironmentName}-SiteURL"
+  
+  LaunchConfigurationName:
+      Description: LaunchConfigurationName for App Instances
+      Value: !Ref 'WebAppLaunchConfig'
+
+  LoadBalancerSecurityGroup:
+      Description: Load Balancer Security Group for EC2 Service
+      Value: !Ref 'LoadBalancerSecurityGroup'
+
+  WebAppTargetGroup:
+      Description: TargetGroup for App Instances
+      Value: !Ref 'WebAppTargetGroup'
+
+  WebAppServerGroup:
+      Description: Auto Scaling Group
+      Value: !Ref 'WebAppServerGroup'
+
+  Listener:
+      Description: Listener for App Instances
+      Value: !Ref 'Listener'
+
+  Version:
+      Description: AWSTemplateFormatVersion "2010-09-09"
+      Value: "2010-09-09"

@@ -1,0 +1,114 @@
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./run_docker.sh
+
+Sending build context to Docker daemon  13.28MB
+Step 1/6 : FROM python:3.7.3-stretch
+ ---> 34a518642c76
+Step 2/6 : WORKDIR /app
+ ---> Running in 089dc4e3231a
+Removing intermediate container 089dc4e3231a
+ ---> 2dc762a74a16
+Step 3/6 : COPY . app.py /app/
+ ---> 85f16848401b
+Step 4/6 : RUN pip install --no-cache-dir --upgrade pip &&    pip install --no-cache-dir --trusted-host pypi.python.org -r requirements.txt
+ ---> Running in ea42c4c81da8
+Collecting pip
+  Downloading https://files.pythonhosted.org/packages/a4/6d/6463d49a933f547439d6b5b98b46af8742cc03ae83543e4d7688c2420f8b/pip-21.3.1-py3-none-any.whl (1.7MB)
+Installing collected packages: pip
+  Found existing installation: pip 19.1.1
+    Uninstalling pip-19.1.1:
+      Successfully uninstalled pip-19.1.1
+Successfully installed pip-21.3.1
+Collecting Click==7.0
+  Downloading Click-7.0-py2.py3-none-any.whl (81 kB)
+Collecting Flask==1.0.2
+  Downloading Flask-1.0.2-py2.py3-none-any.whl (91 kB)
+Collecting itsdangerous==1.1.0
+  Downloading itsdangerous-1.1.0-py2.py3-none-any.whl (16 kB)
+Collecting Jinja2==2.10.3
+  Downloading Jinja2-2.10.3-py2.py3-none-any.whl (125 kB)
+Collecting MarkupSafe==1.1.1
+  Downloading MarkupSafe-1.1.1-cp37-cp37m-manylinux2010_x86_64.whl (33 kB)
+Collecting numpy==1.17.2
+  Downloading numpy-1.17.2-cp37-cp37m-manylinux1_x86_64.whl (20.3 MB)
+Collecting pandas==0.24.2
+  Downloading pandas-0.24.2-cp37-cp37m-manylinux1_x86_64.whl (10.1 MB)
+Collecting python-dateutil==2.8.0
+  Downloading python_dateutil-2.8.0-py2.py3-none-any.whl (226 kB)
+Collecting pytz==2019.3
+  Downloading pytz-2019.3-py2.py3-none-any.whl (509 kB)
+Collecting scikit-learn==0.20.3
+  Downloading scikit_learn-0.20.3-cp37-cp37m-manylinux1_x86_64.whl (5.4 MB)
+Collecting scipy==1.3.1
+  Downloading scipy-1.3.1-cp37-cp37m-manylinux1_x86_64.whl (25.2 MB)
+Collecting six==1.12.0
+  Downloading six-1.12.0-py2.py3-none-any.whl (10 kB)
+Collecting Werkzeug==0.16.0
+  Downloading Werkzeug-0.16.0-py2.py3-none-any.whl (327 kB)
+Collecting pylint
+  Downloading pylint-2.11.1-py3-none-any.whl (392 kB)
+Collecting typing-extensions>=3.10.0
+  Downloading typing_extensions-3.10.0.2-py3-none-any.whl (26 kB)
+Collecting toml>=0.7.1
+  Downloading toml-0.10.2-py2.py3-none-any.whl (16 kB)
+Collecting mccabe<0.7,>=0.6
+  Downloading mccabe-0.6.1-py2.py3-none-any.whl (8.6 kB)
+Collecting isort<6,>=4.2.5
+  Downloading isort-5.9.3-py3-none-any.whl (106 kB)
+Collecting astroid<2.9,>=2.8.0
+  Downloading astroid-2.8.3-py3-none-any.whl (246 kB)
+Collecting platformdirs>=2.2.0
+  Downloading platformdirs-2.4.0-py3-none-any.whl (14 kB)
+Collecting typed-ast<1.5,>=1.4.0
+  Downloading typed_ast-1.4.3-cp37-cp37m-manylinux1_x86_64.whl (743 kB)
+Collecting lazy-object-proxy>=1.4.0
+  Downloading lazy_object_proxy-1.6.0-cp37-cp37m-manylinux1_x86_64.whl (55 kB)
+Requirement already satisfied: setuptools>=20.0 in /usr/local/lib/python3.7/site-packages (from astroid<2.9,>=2.8.0->pylint->-r requirements.txt (line 14)) (41.0.1)
+Collecting wrapt<1.14,>=1.11
+  Downloading wrapt-1.13.2-cp37-cp37m-manylinux2010_x86_64.whl (79 kB)
+Installing collected packages: wrapt, typing-extensions, typed-ast, six, numpy, MarkupSafe, lazy-object-proxy, Werkzeug, toml, scipy, pytz, python-dateutil, platformdirs, mccabe, Jinja2, itsdangerous, isort, Click, astroid, scikit-learn, pylint, pandas, Flask
+Successfully installed Click-7.0 Flask-1.0.2 Jinja2-2.10.3 MarkupSafe-1.1.1 Werkzeug-0.16.0 astroid-2.8.3 isort-5.9.3 itsdangerous-1.1.0 lazy-object-proxy-1.6.0 mccabe-0.6.1 numpy-1.17.2 pandas-0.24.2 platformdirs-2.4.0 pylint-2.11.1 python-dateutil-2.8.0 pytz-2019.3 scikit-learn-0.20.3 scipy-1.3.1 six-1.12.0 toml-0.10.2 typed-ast-1.4.3 typing-extensions-3.10.0.2 wrapt-1.13.2
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+Removing intermediate container ea42c4c81da8
+ ---> 934ad68d9ec4
+Step 5/6 : EXPOSE 80
+ ---> Running in 4e1db13cf59a
+Removing intermediate container 4e1db13cf59a
+ ---> 8818a581dc3a
+Step 6/6 : CMD ["python", "app.py"]
+ ---> Running in b268e7fad718
+Removing intermediate container b268e7fad718
+ ---> 640c847e0ee6
+Successfully built 640c847e0ee6
+Successfully tagged abdelrazekrizk/flask_prediction:latest
+REPOSITORY                        TAG             IMAGE ID       CREATED                  SIZE
+abdelrazekrizk/flask_prediction   latest          640c847e0ee6   Less than a second ago   1.2GB
+<none>                            <none>          8818a581dc3a   1 second ago             1.2GB
+<none>                            <none>          934ad68d9ec4   2 seconds ago            1.2GB
+<none>                            <none>          85f16848401b   21 seconds ago           942MB
+<none>                            <none>          2dc762a74a16   22 seconds ago           929MB
+circleci/picard                   latest          88069759249e   27 hours ago             129MB
+gcr.io/k8s-minikube/kicbase       v0.0.27         9fa1cc16ad6d   5 weeks ago              1.08GB
+circleci/golang                   1.12            837c4149d74f   20 months ago            1.31GB
+circleci/postgres                 9.6-alpine      10aac3dcef7b   22 months ago            37.9MB
+python                            3.7.3-stretch   34a518642c76   2 years ago              929MB
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED        STATUS       PORTS                                                                                                                                  NAMES
+da6e2e7f88f8   gcr.io/k8s-minikube/kicbase:v0.0.27   "/usr/local/bin/entr…"   44 hours ago   Up 3 hours   127.0.0.1:49157->22/tcp, 127.0.0.1:49156->2376/tcp, 127.0.0.1:49155->5000/tcp, 127.0.0.1:49154->8443/tcp, 127.0.0.1:49153->32443/tcp   minikube
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 808-776-294
+[2021-10-22 23:32:04,917] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-22 23:32:04,928] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-22 23:32:04,935] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-22 23:32:04,937] INFO in app: Prediction: [20.35373177134412]
+172.17.0.1 - - [22/Oct/2021 23:32:04] "POST /predict HTTP/1.1" 200 -

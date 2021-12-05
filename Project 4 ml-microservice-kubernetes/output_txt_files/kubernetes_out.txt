@@ -1,0 +1,697 @@
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./ru.shdeployment.apps/flaskprediction created
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./ru.shdeployment.apps/flaskprediction created
+Name of the Pod: flaskprediction-5cff854c59-fmvf7
+pod/flaskprediction-5cff854c59-fmvf7 condition met
+service/flaskapp exposed
+NAME                               READY   STATUS    RESTARTS   AGE
+flaskprediction-5cff854c59-fmvf7   1/1     Running   0          2s
+Forwarding from 127.0.0.1:8000 -> 80
+Forwarding from [::1]:8000 -> 80
+Handling connection for 8000
+
+* Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 931-826-802
+[2021-10-27 13:34:58,867] INFO in app: JSON payload:  
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:05:47,201] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:47,209] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:47,212] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:05:47] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:05:48,749] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:05:48,758] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:48,765] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:48,767] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:05:48] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:05:50,052] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:05:50,061] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:50,068] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:50,070] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:05:50] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:05:51,221] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:05:51,229] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:51,236] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:51,239] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:05:51] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:05:52,485] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:05:52,494] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:52,501] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:52,503] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:05:52] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:05:53,708] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:05:53,717] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:53,724] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:53,727] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:05:53] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:05:54,910] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:05:54,918] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:54,925] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:54,928] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:05:54] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:05:56,156] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:05:56,166] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:56,173] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:56,176] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:05:56] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:05:57,452] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:05:57,461] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:57,468] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:57,470] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:05:57] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:05:58,837] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:05:58,846] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:58,853] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:05:58,855] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:05:58] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:00,156] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:00,165] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:00,172] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:00,174] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:00] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:01,429] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:01,437] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:01,444] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:01,447] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:01] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:02,764] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:02,772] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:02,780] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:02,782] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:02] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:04,109] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:04,118] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:04,125] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:04,127] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:04] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:05,493] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:05,501] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:05,508] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:05,511] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:05] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:06,884] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:06,893] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:06,900] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:06,902] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:06] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:08,172] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:08,181] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:08,188] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:08,190] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:08] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:09,372] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:09,381] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:09,388] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:09,390] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:09] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:10,660] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:10,669] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:10,676] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:10,678] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:10] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:11,893] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:11,901] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:11,908] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:11,911] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:11] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:13,125] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:13,134] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:13,141] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:13,143] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:13] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:14,365] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:14,373] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:14,380] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:14,383] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:14] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:15,668] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:15,676] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:15,683] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:15,686] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:15] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:16,868] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:16,877] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:16,884] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:16,886] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:16] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:18,068] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:18,077] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:18,084] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:18,086] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:18] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:06:19,268] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:06:19,276] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:19,284] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:06:19,286] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:06:19] "POST /predict HTTP/1.1" 200 -
+
+# the Prediction show after using ctrl + C and the app handle for connection
+
+# check that our app run in port 8000
+
+ubuntu@ip-172-31-22-124:~$ sudo lsof -i -P -n | grep LISTEN
+systemd-r   846 systemd-resolve   13u  IPv4  13022      0t0  TCP 127.0.0.53:53 (LISTEN)
+sshd       1071            root    3u  IPv4  22919      0t0  TCP *:22 (LISTEN)
+sshd       1071            root    4u  IPv6  22930      0t0  TCP *:22 (LISTEN)
+node       2092          ubuntu   18u  IPv4  24299      0t0  TCP 127.0.0.1:35725 (LISTEN)
+docker-pr  3100            root    4u  IPv4  30870      0t0  TCP 127.0.0.1:49153 (LISTEN)
+docker-pr  3114            root    4u  IPv4  24497      0t0  TCP 127.0.0.1:49154 (LISTEN)
+docker-pr  3128            root    4u  IPv4  29005      0t0  TCP 127.0.0.1:49155 (LISTEN)
+docker-pr  3142            root    4u  IPv4  27369      0t0  TCP 127.0.0.1:49156 (LISTEN)
+docker-pr  3156            root    4u  IPv4  24514      0t0  TCP 127.0.0.1:49157 (LISTEN)
+kubectl   50108          ubuntu    8u  IPv4 206428      0t0  TCP 127.0.0.1:8000 (LISTEN)
+kubectl   50108          ubuntu    9u  IPv6 206429      0t0  TCP [::1]:8000 (LISTEN)
+
+# using kubectl get all it show that our app service run in 8000
+
+ubuntu@ip-172-31-22-124:~$ kubectl get all
+NAME                                   READY   STATUS    RESTARTS   AGE
+pod/flaskprediction-5cff854c59-fmvf7   1/1     Running   0          16m
+
+NAME                 TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/flaskapp     ClusterIP   10.96.24.193   <none>        8000/TCP   16m
+service/kubernetes   ClusterIP   10.96.0.1      <none>        443/TCP    6d10h
+
+NAME                              READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/flaskprediction   1/1     1            1           16m
+
+NAME                                         DESIRED   CURRENT   READY   AGE
+replicaset.apps/flaskprediction-5cff854c59   1         1         1       16m
+
+
+# using kubectl logs pod to see apps logs it show that it return predict 
+
+ubuntu@ip-172-31-22-124:~$ kubectl logs pod/flaskprediction-5cff854c59-fmvf7
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 931-826-802
+[2021-10-27 13:34:58,867] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:34:58,877] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:34:58,884] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:34:58,887] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:34:58] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:35:01,993] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:35:02,002] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:35:02,009] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:35:02,011] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:35:02] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:35:03,489] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:35:03,497] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:35:03,504] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:35:03,507] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:35:03] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:35:04,712] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:35:04,721] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:35:04,728] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:35:04,730] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:35:04] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:35:05,890] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:35:05,898] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:35:05,905] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:35:05,908] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:35:05] "POST /predict HTTP/1.1" 200 -
+[2021-10-27 13:35:07,096] INFO in app: JSON payload: 
+{'CHAS': {'0': 0}, 'RM': {'0': 6.575}, 'TAX': {'0': 296.0}, 'PTRATIO': {'0': 15.3}, 'B': {'0': 396.9}, 'LSTAT': {'0': 4.98}}
+[2021-10-27 13:35:07,105] INFO in app: Inference payload DataFrame: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:35:07,112] INFO in app: Scaling Payload: 
+   CHAS     RM    TAX  PTRATIO      B  LSTAT
+0     0  6.575  296.0     15.3  396.9   4.98
+[2021-10-27 13:35:07,115] INFO in app: Prediction: [20.35373177134412]
+127.0.0.1 - - [27/Oct/2021 13:35:07] "POST /predict HTTP/1.1" 200 -
+ubuntu@ip-172-31-22-124:~$ 
+
+
+# run make_prediction.sh
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ 
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./make_prediction.sh
+Port: 8000
+host: 0.0.0.0
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ 

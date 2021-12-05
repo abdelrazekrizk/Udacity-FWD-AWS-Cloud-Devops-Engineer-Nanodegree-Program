@@ -1,0 +1,7 @@
+(.devops) ubuntu@ip-172-31-22-124:~/projects/Project-4-ml-microservice-kubernetes$ . ./run_kubernetes.sh
+pod/flaskprediction created
+service/flaskapp exposed
+pod/flaskprediction condition met
+NAME              READY   STATUS    RESTARTS   AGE
+flaskprediction   1/1     Running   0          1s
+Forwarding from [::1]:8080 -> 8080

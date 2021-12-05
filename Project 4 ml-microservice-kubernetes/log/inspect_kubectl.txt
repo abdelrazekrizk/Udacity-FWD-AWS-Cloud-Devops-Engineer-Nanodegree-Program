@@ -1,0 +1,381 @@
+# use the kubectl proxy command to run a proxy in a second terminal window
+
+ubuntu@ip-172-31-22-124:~$ echo -e "\n\n\n\e[92mStarting Proxy
+
+# open a new terminal and run the proxy
+
+ubuntu@ip-172-31-22-124:~$ kubectl proxy
+Starting to serve on 127.0.0.1:8001
+
+# run a curl request
+ubuntu@ip-172-31-22-124:~$ curl http://localhost:8001/version
+{
+  "major": "1",
+  "minor": "22",
+  "gitVersion": "v1.22.2",
+  "gitCommit": "8b5a19147530eaac9476b0ab82980b4088bbc1b2",
+  "gitTreeState": "clean",
+  "buildDate": "2021-09-15T21:32:41Z",
+  "goVersion": "go1.16.8",
+  "compiler": "gc",
+  "platform": "linux/amd64"
+}ubuntu@ip-172-31-22-124:~$ kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}'
+flaskprediction-88b4ff6b5-gppvp
+ubuntu@ip-172-31-22-124:~$ curl http://localhost:8001/api/v1/namespaces/default/pods/flaskprediction-88b4ff6b5-gppvp/
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "flaskprediction-88b4ff6b5-gppvp",
+    "generateName": "flaskprediction-88b4ff6b5-",
+    "namespace": "default",
+    "uid": "65b2e1f6-1abf-42ec-beac-bf0b8633c400",
+    "resourceVersion": "83599",
+    "creationTimestamp": "2021-10-25T12:44:14Z",
+    "labels": {
+      "app": "flaskprediction",
+      "pod-template-hash": "88b4ff6b5"
+    },
+    "ownerReferences": [
+      {
+        "apiVersion": "apps/v1",
+        "kind": "ReplicaSet",
+        "name": "flaskprediction-88b4ff6b5",
+        "uid": "43e5fc1f-04f9-4d85-a3fb-d378ada3df23",
+        "controller": true,
+        "blockOwnerDeletion": true
+      }
+    ],
+    "managedFields": [
+      {
+        "manager": "kube-controller-manager",
+        "operation": "Update",
+        "apiVersion": "v1",
+        "time": "2021-10-25T12:44:14Z",
+        "fieldsType": "FieldsV1",
+        "fieldsV1": {"f:metadata":{"f:generateName":{},"f:labels":{".":{},"f:app":{},"f:pod-template-hash":{}},"f:ownerReferences":{".":{},"k:{\"uid\":\"43e5fc1f-04f9-4d85-a3fb-d378ada3df23\"}":{}}},"f:spec":{"f:containers":{"k:{\"name\":\"flask-prediction-vfwcq\"}":{".":{},"f:image":{},"f:imagePullPolicy":{},"f:name":{},"f:resources":{},"f:terminationMessagePath":{},"f:terminationMessagePolicy":{}}},"f:dnsPolicy":{},"f:enableServiceLinks":{},"f:restartPolicy":{},"f:schedulerName":{},"f:securityContext":{},"f:terminationGracePeriodSeconds":{}}}
+      },
+      {
+        "manager": "kubelet",
+        "operation": "Update",
+        "apiVersion": "v1",
+        "time": "2021-10-25T12:44:16Z",
+        "fieldsType": "FieldsV1",
+        "fieldsV1": {"f:status":{"f:conditions":{"k:{\"type\":\"ContainersReady\"}":{".":{},"f:lastProbeTime":{},"f:lastTransitionTime":{},"f:status":{},"f:type":{}},"k:{\"type\":\"Initialized\"}":{".":{},"f:lastProbeTime":{},"f:lastTransitionTime":{},"f:status":{},"f:type":{}},"k:{\"type\":\"Ready\"}":{".":{},"f:lastProbeTime":{},"f:lastTransitionTime":{},"f:status":{},"f:type":{}}},"f:containerStatuses":{},"f:hostIP":{},"f:phase":{},"f:podIP":{},"f:podIPs":{".":{},"k:{\"ip\":\"172.17.0.4\"}":{".":{},"f:ip":{}}},"f:startTime":{}}},
+        "subresource": "status"
+      }
+    ]
+  },
+  "spec": {
+    "volumes": [
+      {
+        "name": "kube-api-access-lq4cf",
+        "projected": {
+          "sources": [
+            {
+              "serviceAccountToken": {
+                "expirationSeconds": 3607,
+                "path": "token"
+              }
+            },
+            {
+              "configMap": {
+                "name": "kube-root-ca.crt",
+                "items": [
+                  {
+                    "key": "ca.crt",
+                    "path": "ca.crt"
+                  }
+                ]
+              }
+            },
+            {
+              "downwardAPI": {
+                "items": [
+                  {
+                    "path": "namespace",
+                    "fieldRef": {
+                      "apiVersion": "v1",
+                      "fieldPath": "metadata.namespace"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "defaultMode": 420
+        }
+      }
+    ],
+    "containers": [
+      {
+        "name": "flask-prediction-vfwcq",
+        "image": "docker.io/abdelrazekrizk/flask_prediction:version1.1.0",
+        "resources": {
+          
+        },
+        "volumeMounts": [
+          {
+            "name": "kube-api-access-lq4cf",
+            "readOnly": true,
+            "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
+          }
+        ],
+        "terminationMessagePath": "/dev/termination-log",
+        "terminationMessagePolicy": "File",
+        "imagePullPolicy": "IfNotPresent"
+      }
+    ],
+    "restartPolicy": "Always",
+    "terminationGracePeriodSeconds": 30,
+    "dnsPolicy": "ClusterFirst",
+    "serviceAccountName": "default",
+    "serviceAccount": "default",
+    "nodeName": "minikube",
+    "securityContext": {
+      
+    },
+    "schedulerName": "default-scheduler",
+    "tolerations": [
+      {
+        "key": "node.kubernetes.io/not-ready",
+        "operator": "Exists",
+        "effect": "NoExecute",
+        "tolerationSeconds": 300
+      },
+      {
+        "key": "node.kubernetes.io/unreachable",
+        "operator": "Exists",
+        "effect": "NoExecute",
+        "tolerationSeconds": 300
+      }
+    ],
+    "priority": 0,
+    "enableServiceLinks": true,
+    "preemptionPolicy": "PreemptLowerPriority"
+  },
+  "status": {
+    "phase": "Running",
+    "conditions": [
+      {
+        "type": "Initialized",
+        "status": "True",
+        "lastProbeTime": null,
+        "lastTransitionTime": "2021-10-25T12:44:14Z"
+      },
+      {
+        "type": "Ready",
+        "status": "True",
+        "lastProbeTime": null,
+        "lastTransitionTime": "2021-10-25T12:44:16Z"
+      },
+      {
+        "type": "ContainersReady",
+        "status": "True",
+        "lastProbeTime": null,
+        "lastTransitionTime": "2021-10-25T12:44:16Z"
+      },
+      {
+        "type": "PodScheduled",
+        "status": "True",
+        "lastProbeTime": null,
+        "lastTransitionTime": "2021-10-25T12:44:14Z"
+      }
+    ],
+    "hostIP": "192.168.49.2",
+    "podIP": "172.17.0.4",
+    "podIPs": [
+      {
+        "ip": "172.17.0.4"
+      }
+    ],
+    "startTime": "2021-10-25T12:44:14Z",
+    "containerStatuses": [
+      {
+        "name": "flask-prediction-vfwcq",
+        "state": {
+          "running": {
+            "startedAt": "2021-10-25T12:44:15Z"
+          }
+        },
+        "lastState": {
+          
+        },
+        "ready": true,
+        "restartCount": 0,
+        "image": "abdelrazekrizk/flask_prediction:version1.1.0",
+        "imageID": "docker-pullable://abdelrazekrizk/flask_prediction@sha256:ae20aa933525958efba565ae25e2896211de570d69a93a89a92f8545b70e9335",
+        "containerID": "docker://cb7a7441cf286115cf352f9e12f9dce9f66d3e0e3d84b20f8a6f5d9333ac5aa8",
+        "started": true
+      }
+    ],
+    "qosClass": "BestEffort"
+  }
+
+
+ubuntu@ip-172-31-22-124:~$ kubectl get pods
+NAME                              READY   STATUS    RESTARTS   AGE
+flaskprediction-88b4ff6b5-gppvp   1/1     Running   0          7m18s
+ubuntu@ip-172-31-22-124:~$ kubectl describe pods
+Name:         flaskprediction-88b4ff6b5-gppvp
+Namespace:    default
+Priority:     0
+Node:         minikube/192.168.49.2
+Start Time:   Mon, 25 Oct 2021 12:44:14 +0000
+Labels:       app=flaskprediction
+              pod-template-hash=88b4ff6b5
+Annotations:  <none>
+Status:       Running
+IP:           172.17.0.4
+IPs:
+  IP:           172.17.0.4
+Controlled By:  ReplicaSet/flaskprediction-88b4ff6b5
+Containers:
+  flask-prediction-vfwcq:
+    Container ID:   docker://cb7a7441cf286115cf352f9e12f9dce9f66d3e0e3d84b20f8a6f5d9333ac5aa8
+    Image:          docker.io/abdelrazekrizk/flask_prediction:version1.1.0
+    Image ID:       docker-pullable://abdelrazekrizk/flask_prediction@sha256:ae20aa933525958efba565ae25e2896211de570d69a93a89a92f8545b70e9335
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Mon, 25 Oct 2021 12:44:15 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-lq4cf (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-lq4cf:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  7m35s  default-scheduler  Successfully assigned default/flaskprediction-88b4ff6b5-gppvp to minikube
+  Normal  Pulled     7m36s  kubelet            Container image "docker.io/abdelrazekrizk/flask_prediction:version1.1.0" already present on machine
+  Normal  Created    7m36s  kubelet            Created container flask-prediction-vfwcq
+  Normal  Started    7m35s  kubelet            Started container flask-prediction-vfwcq
+
+
+ubuntu@ip-172-31-22-124:~$ curl http://localhost:8001/api/v1/namespaces/default/pods/flaskprediction-88b4ff6b5-gppvp/proxy/
+<h3>Sklearn Prediction Home</h3>ubuntu@ip-172-31-22-124:~$ kubectl exec flaskprediction-88b4ff6b5-gppvp -- env 
+PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=flaskprediction-88b4ff6b5-gppvp
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP_PORT=443
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+LANG=C.UTF-8
+GPG_KEY=0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
+PYTHON_VERSION=3.7.3
+PYTHON_PIP_VERSION=19.1.1
+HOME=/root
+
+ubuntu@ip-172-31-22-124:~$ cat app.py
+cat: app.py: No such file or directory
+
+# Executing command on the container
+
+ubuntu@ip-172-31-22-124:~$ kubectl exec -ti flaskprediction-88b4ff6b5-gppvp -- bash
+
+# Explore App.py
+root@flaskprediction-88b4ff6b5-gppvp:/app# cat app.py
+import logging
+from flask import Flask, request, jsonify
+from flask.logging import create_logger
+
+import pandas as pd
+from sklearn.externals import joblib
+from sklearn.preprocessing import StandardScaler
+
+app = Flask(__name__)
+LOG = create_logger(app)
+LOG.setLevel(logging.INFO)
+
+def scale(payload):
+    """Scales Payload"""
+
+    LOG.info(f"Scaling Payload: \n{payload}")
+    scaler = StandardScaler().fit(payload.astype(float))
+    scaled_adhoc_predict = scaler.transform(payload.astype(float))
+    return scaled_adhoc_predict
+
+@app.route("/")
+def home():
+    """home APP."""
+    html = "<h3>Sklearn Prediction Home</h3>"
+    return html.format(format)
+
+
+@app.route("/predict", methods=['POST'])
+def predict():
+    """Performs an sklearn prediction
+
+        input looks like:
+        {
+        "CHAS":{
+        "0":0
+        },
+        "RM":{
+        "0":6.575
+        },
+        "TAX":{
+        "0":296.0
+        },
+        "PTRATIO":{
+        "0":15.3
+        },
+        "B":{
+        "0":396.9
+        },
+        "LSTAT":{
+        "0":4.98
+        }
+
+        result looks like:
+        { "prediction": [ <val> ] }
+
+        """
+
+    # Logging the input payload
+    json_payload = request.json
+    LOG.info(f"JSON payload: \n{json_payload}")
+    inference_payload = pd.DataFrame(json_payload)
+    LOG.info(f"Inference payload DataFrame: \n{inference_payload}")
+    # scale the input
+    scaled_payload = scale(inference_payload)
+    # get an output prediction from the pretrained model, clf
+    prediction = list(clf.predict(scaled_payload))
+    # TO DO:  Log the output prediction value
+    LOG.info(f"Prediction: {prediction}")
+    return jsonify({'prediction': prediction})
+
+if __name__ == "__main__":
+    # load pretrained model as clf
+    clf = joblib.load("./model_data/boston_housing_prediction.joblib")
+    app.run(host='0.0.0.0', port=80, debug=True) # specify port=80
+
+root@flaskprediction-88b4ff6b5-gppvp:/app# 
+
+# run a curl request agenist to ensure it is run inside our contanier port 8000
+
+ubuntu@ip-172-31-22-124:~$ curl http://localhost:8000/
+<h3>Sklearn Prediction Home</h3>
+

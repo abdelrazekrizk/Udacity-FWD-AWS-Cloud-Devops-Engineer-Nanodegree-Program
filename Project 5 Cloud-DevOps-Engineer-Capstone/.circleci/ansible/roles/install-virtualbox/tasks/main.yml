@@ -1,0 +1,35 @@
+---
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: "yes"
+
+- name: "remove dependencies that are no longer required"
+  become: yes
+  apt:
+    autoremove: yes
+
+
+- name: "install virtualbox"
+  become: yes
+  shell: |
+           sudo apt-get install virtualbox -y
+  args:
+     warn: false
+
+- name: "update virtualbox"
+  become: yes
+  shell: |
+           sudo apt-get update -y
+           sudo apt-get upgrade -y
+  args:
+     warn: false
+
+
+
+

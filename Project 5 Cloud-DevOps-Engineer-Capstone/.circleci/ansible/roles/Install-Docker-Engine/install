@@ -1,0 +1,26 @@
+- name: "Create Download directory"
+  become: yes
+  file:
+    path: "/assets"
+    state: directory
+    owner: root
+    group: root
+
+
+- name: "Download Index of linux/ubuntu/dists/bionic/pool/stable/arm64/ "
+  become: yes
+  shell: |
+          cd /assets
+          sudo wget https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/arm64/
+          cd /assets
+          pwd
+          ls -la
+  args:
+     warn: false
+
+- name: "Check for WorkSpace file"
+  become: true
+  command:
+           sudo dpkg -i /path/to/package.deb
+  args:
+     warn: false

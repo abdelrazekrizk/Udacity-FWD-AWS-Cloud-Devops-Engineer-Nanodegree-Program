@@ -1,0 +1,87 @@
+## Quickstart (GKE)
+
+[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/microservices-demo&cloudshell_workspace=.&cloudshell_tutorial=docs/cloudshell-tutorial.md)
+
+1. **[Create a Google Cloud Platform project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project)** or use an existing project. Set the `PROJECT_ID` environment variable and ensure the Google Kubernetes Engine and Cloud Operations APIs are enabled.
+
+```
+PROJECT_ID="<your-project-id>"
+gcloud services enable container.googleapis.com --project ${PROJECT_ID}
+gcloud services enable monitoring.googleapis.com \
+    cloudtrace.googleapis.com \
+    clouddebugger.googleapis.com \
+    cloudprofiler.googleapis.com \
+    --project ${PROJECT_ID}
+```
+
+2. **Clone this repository.**
+
+```
+git clone https://github.com/abdelrazekrizk/Project-5-Cloud-DevOps-Engineer-Capstone
+cd Project-5-Cloud-DevOps-Engineer-Capstone
+```
+
+3. **Create a GKE cluster.**
+
+- GKE autopilot mode (see [Autopilot
+overview](https://cloud.google.com/kubernetes-engine/docs/concepts/autopilot-overview)
+to learn more):
+
+```
+REGION=us-central1
+gcloud container clusters create-auto udacity-web \
+    --project=${PROJECT_ID} --region=${REGION}
+```
+
+- GKE Standard mode:
+
+```
+ZONE=us-central1-b
+gcloud container clusters create udacity-web \
+    --project=${PROJECT_ID} --zone=${ZONE} \
+    --machine-type=e2-standard-2 --num-nodes=4
+```
+
+4. **Deploy the sample app to the cluster.**
+
+```
+kubectl apply -f Deployment.yaml
+kubectl apply -f Service.yaml
+```
+
+5. **Wait for the Pods to be ready.**
+
+```
+kubectl get pods
+```
+
+After a few minutes, you should see:
+
+```
+NAME                                     READY   STATUS    RESTARTS   AGE
+
+udacity-web-657d76d77                    1/1     Running   0          120m
+udacity-web-657d76d77                    1/1     Running   0          120m
+udacity-web-657d76d77                    1/1     Running   0          120m
+```
+
+7. **Access the web frontend in a browser** using the frontend's `EXTERNAL_IP`.
+
+```
+kubectl get service frontend-external | awk '{print $4}'
+```
+
+*Example output - do not copy*
+
+```
+EXTERNAL-IP
+<your-ip>
+```
+
+**Note**- you may see `<pending>` while GCP provisions the load balancer. If this happens, wait a few minutes and re-run the command.
+
+8. [Optional] **Clean up**:
+
+```
+gcloud container clusters delete udacity-web \
+    --project=${PROJECT_ID} --zone=${ZONE}

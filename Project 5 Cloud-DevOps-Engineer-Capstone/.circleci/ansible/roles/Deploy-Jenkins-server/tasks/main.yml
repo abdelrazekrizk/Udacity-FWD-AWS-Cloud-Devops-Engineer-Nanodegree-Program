@@ -1,0 +1,35 @@
+---
+- name: "install apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "Create WorkSpace directory"
+  become: yes
+  file:
+    path: "~/WorkSpace"
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: 0777
+
+- name: "clone microservices-demo files to Jenkins-server "
+  become: yes
+  shell: |
+          cd ~/WorkSpace
+          git clone https://github.com/GoogleCloudPlatform/microservices-demo.git
+          cd ~/microservices-demo
+          pwd
+  args:
+     warn: false
+
+- name: "Check for WorkSpace file"
+  become: true
+  command:
+          ls -la ~/WorkSpace/microservices-demo
+
+
+# File Permission 0755 http://www.filepermissions.com/file-permission/0755
+
+
+
